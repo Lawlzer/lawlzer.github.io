@@ -1,71 +1,86 @@
+import lineup1 from "./lineups/1/index";
 import * as React from "react";
 import { useState } from "react";
+import { Lineup, MapArea } from "../../types";
 
-const lineups: any = [{}];
-interface Lineup {
-  from: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
-  to: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  }[];
-  id: string;
-  agent?: string;
-  util?: string;
-  selected?: boolean;
-}
+const fromColor = "#010BFF";
+const toColor = "#FF0000";
 
-<g id="Lineup To">
-  <rect
-    id="A Outside Box"
-    x={626}
-    y={265}
-    width={24}
-    height={24}
-    fill="#FF0000"
-  />
-  <rect id="A Wine" x={721} y={368} width={39} height={34} fill="#FF0000" />
-</g>;
+const tempAreasFrom: MapArea[] = [
+  {
+    title: "A TreeHouse Box",
+    x: 556,
+    y: 218,
+    width: 7,
+    height: 7,
+  },
+  {
+    title: "A Main Box",
+    x: 543,
+    y: 448,
+    width: 7,
+    height: 7,
+  },
+  {
+    title: "A Tree Tree",
+    x: 506,
+    y: 288,
+    width: 7,
+    height: 7,
+  },
+  {
+    title: "A CT Corner",
+    x: 601,
+    y: 102,
+    width: 7,
+    height: 7,
+  },
+  {
+    title: "A Mix Boxes",
+    x: 509,
+    y: 384,
+    width: 7,
+    height: 7,
+  },
+];
+
+const tempAreasTo: MapArea[] = [
+  {
+    title: "A Wine",
+    x: 543,
+    y: 446,
+    width: 11,
+    height: 9,
+  },
+  {
+    title: "A Outside Gen",
+    x: 626,
+    y: 264,
+    width: 24,
+    height: 24,
+  },
+];
 
 const SvgComponent = () => {
-  const [lineups, setLineups] = useState<Lineup[]>([
-    {
-      from: {
-        x: 543,
-        y: 446,
-        width: 11,
-        height: 9,
-      },
-      to: [
-        {
-          x: 626,
-          y: 265,
-          width: 24,
-          height: 24,
-        },
-        {
-          x: 721,
-          y: 368,
-          width: 39,
-          height: 34,
-        },
-      ],
-      id: "aaaa",
-      selected: false,
-    },
-  ]);
+  const [areasTo, setAreasTo] = useState<MapArea[]>(tempAreasTo);
+  const [areasFrom, setAreasFrom] = useState<MapArea[]>(tempAreasFrom);
+
+  const [primaryTo, setPrimaryTo] = useState<MapArea | null>(null);
+  const [primaryFrom, setPrimaryFrom] = useState<MapArea | null>(null);
+
+  const [lineups, setLineups] = useState<Lineup[]>([lineup1]);
+
+  console.log("areasTo", areasTo);
+  console.log("areasFrom", areasFrom);
+  console.log("primaryTo", primaryTo);
+  console.log("primaryFrom", primaryFrom);
+  console.log("lineups", lineups);
 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={650}
-      height={650}
+      width={900}
+      height={900}
       viewBox="0 0 800 800"
       fill="none"
     >
@@ -1008,42 +1023,76 @@ const SvgComponent = () => {
             strokeWidth={1.20395}
           />
         </g>
-        {/* <g id="Lineup To">
-          <rect
-            id="A Outside Box"
-            x={626}
-            y={265}
-            width={24}
-            height={24}
-            fill="#FF0000"
-          />
-          <rect
-            id="A Wine"
-            x={721}
-            y={368}
-            width={39}
-            height={34}
-            fill="#FF0000"
-          />
-        </g>
-        <g id="Lineup From">
-          <rect
-            id="A Main Boxes"
-            x={543}
-            y={446}
-            width={11}
-            height={9}
-            fill="#010BFF"
-          />
-          <rect
-            id="A Tree "
-            x={556}
-            y={218}
-            width={8}
-            height={7}
-            fill="#010BFF"
-          />
-        </g> */}
+
+        {areasFrom.map((areaFrom) => {
+          return (
+            <>
+              <image
+                key={"from " + areaFrom.title}
+                className="cursor-pointer duration-1000"
+                x={areaFrom.x - 5} // todo fix
+                y={areaFrom.y - 5}
+                width={areaFrom.width + 10}
+                height={areaFrom.height + 10}
+                opacity={
+                  primaryFrom === null || areaFrom.title !== primaryFrom.title
+                    ? 0.5
+                    : 1
+                }
+                href="https://i.ibb.co/Qkkt8Db/gekko.png" //todo
+                // fill={fromColor}
+                onClick={() => {
+                  const localAreasFrom = [...areasFrom];
+
+                  localAreasFrom.forEach((area) => (area.selected = false));
+                  setPrimaryFrom(areaFrom);
+                  // setAreasFrom(localAreasFrom);
+
+                  // If this invalidates the To, remove it.
+                  if (primaryTo === null) return;
+                  if (primaryTo.title !== areaFrom.title) setPrimaryTo(null);
+                }}
+              ></image>
+            </>
+          );
+        })}
+        {areasTo.map((areaTo) => {
+          return (
+            <>
+              <rect
+                key={"to " + areaTo.title}
+                className="cursor-pointer duration-1000"
+                x={areaTo.x}
+                y={areaTo.y}
+                width={areaTo.width}
+                height={areaTo.height}
+                opacity={
+                  primaryFrom === null
+                    ? 0
+                    : primaryTo?.title === areaTo.title
+                    ? 1
+                    : lineups.some(
+                        (lineup) =>
+                          primaryFrom.title === lineup.fromTitle &&
+                          lineup.toTitle === areaTo.title
+                      )
+                    ? 0.5
+                    : 0
+                }
+                fill={toColor}
+                onClick={() => {
+                  const localAreasTo = [...areasTo];
+
+                  localAreasTo.forEach((area) => (area.selected = false));
+                  setPrimaryTo(areaTo);
+                  // setAreasTo(localAreasTo);
+                }}
+              ></rect>
+            </>
+          );
+        })}
+
+        {/*         
         {lineups.map((lineup) => (
           <>
             <rect
@@ -1083,6 +1132,7 @@ const SvgComponent = () => {
             </>
           </>
         ))}
+        */}
       </g>
     </svg>
   );
