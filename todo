@@ -4,5 +4,11 @@ map/agent selection?
 
 only show positions if there are relevant lineups available, otherwise grayed out?
 Make hidden elements unclickable
-     className={`cursor-pointer duration-1000 ${""}`}
-     className="cursor-pointer duration-1000 pointer-events-non"
+className={`cursor-pointer duration-1000 ${""}`}
+className="cursor-pointer duration-1000 pointer-events-non"
+
+https://www.figma.com/file/T1ZcC1Hrpx2wxbfvn3y6Au/Temp?type=design&node-id=2-527&mode=design&t=rgtFrel6ZJqbxrn4-0
+
+https://react-svgr.com/playground/?svgo=false
+
+https://codebeautify.org/svg-formatter-beautifier
