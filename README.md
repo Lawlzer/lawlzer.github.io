@@ -1,5 +1,3 @@
-https://www.figma.com/file/T1ZcC1Hrpx2wxbfvn3y6Au/Temp?type=design&node-id=2-527&mode=design&t=rgtFrel6ZJqbxrn4-0
+This is not yet production-ready, or on a website!
 
-https://react-svgr.com/playground/?svgo=false
-
-https://codebeautify.org/svg-formatter-beautifier
+This README.md will be updated as soon this is available on a website.
