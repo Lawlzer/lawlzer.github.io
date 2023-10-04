@@ -1,12 +1,17 @@
-import lineup1 from "./lineups/1/index";
 import * as React from "react";
 import { useState } from "react";
-import { Lineup, MapArea } from "../../types";
 
-const fromColor = "#010BFF";
-const toColor = "#FF0000";
+import type { BottomleftImageVideo, LineupDirection } from "../../App";
+import {
+  type Agent,
+  imageMap,
+  type Lineup,
+  type MapArea,
+  Utility,
+} from "../../types";
+import lineups from "./lineups";
 
-const tempAreasFrom: MapArea[] = [
+const areasFrom = [
   {
     title: "A TreeHouse Box",
     x: 556,
@@ -36,21 +41,49 @@ const tempAreasFrom: MapArea[] = [
     height: 7,
   },
   {
-    title: "A Mix Boxes",
+    title: "A Mid Boxes",
     x: 509,
     y: 384,
     width: 7,
     height: 7,
   },
-];
+  {
+    title: "B Main Box",
+    x: 134,
+    y: 420,
+    width: 11,
+    height: 11,
+  },
+  {
+    title: "CT Triple Barrels",
+    x: 447,
+    y: 161,
+    width: 7,
+    height: 7,
+  },
+] as const; // Ideally we would ensure this satisfies MapArea[] but that is extremely hard to do
 
-const tempAreasTo: MapArea[] = [
+const areasTo = [
+  {
+    title: "A Dice",
+    x: 674,
+    y: 231,
+    width: 32,
+    height: 28,
+  },
   {
     title: "A Wine",
-    x: 543,
-    y: 446,
-    width: 11,
-    height: 9,
+    x: 721,
+    y: 368,
+    width: 39,
+    height: 34,
+  },
+  {
+    title: "A Generator",
+    x: 610,
+    y: 238,
+    width: 24,
+    height: 24,
   },
   {
     title: "A Outside Gen",
@@ -59,22 +92,136 @@ const tempAreasTo: MapArea[] = [
     width: 24,
     height: 24,
   },
-];
+  {
+    title: "B Default Box",
+    x: 98,
+    y: 208,
+    width: 21,
+    height: 22,
+  },
+  {
+    title: "B Far Box",
+    x: 112,
+    y: 156,
+    width: 21,
+    height: 21,
+  },
+  {
+    title: "B Opposite Lane",
+    x: 175,
+    y: 156,
+    width: 29,
+    height: 23,
+  },
+] as const; // Ideally we would ensure this satisfies MapArea[] but that is extremely hard to do
 
-const SvgComponent = () => {
-  const [areasTo, setAreasTo] = useState<MapArea[]>(tempAreasTo);
-  const [areasFrom, setAreasFrom] = useState<MapArea[]>(tempAreasFrom);
+export type FromAreaTitles = (typeof areasFrom)[number]["title"];
+export type ToAreaTitles = (typeof areasTo)[number]["title"];
+export type AllAreaTitles = FromAreaTitles | ToAreaTitles;
 
-  const [primaryTo, setPrimaryTo] = useState<MapArea | null>(null);
-  const [primaryFrom, setPrimaryFrom] = useState<MapArea | null>(null);
+const SvgComponent = ({
+  agent,
+  util,
+  lineupDirection,
+  setBottomleftImageVideoImages,
+}: {
+  agent: Agent;
+  util: Utility;
+  lineupDirection: LineupDirection;
+  setBottomleftImageVideoImages: ReturnType<
+    typeof useState<BottomleftImageVideo>
+  >[1];
+}) => {
+  const [primaryTo, setPrimaryTo] = useState<MapArea<ToAreaTitles> | null>(
+    null
+  );
+  const [primaryFrom, setPrimaryFrom] =
+    useState<MapArea<FromAreaTitles> | null>(null);
 
-  const [lineups, setLineups] = useState<Lineup[]>([lineup1]);
+  function getAreaOpacity(thisArea: MapArea<string>): number {
+    const areaIsUsedInLineup = lineups.some((lineup) => {
+      if (
+        lineup.agent === agent &&
+        lineup.util === util &&
+        (lineup.fromTitle === thisArea.title ||
+          lineup.toTitle === thisArea.title)
+      ) {
+        return true;
+      }
+      return false;
+    });
+    if (!areaIsUsedInLineup) return 0;
 
-  console.log("areasTo", areasTo);
-  console.log("areasFrom", areasFrom);
-  console.log("primaryTo", primaryTo);
-  console.log("primaryFrom", primaryFrom);
-  console.log("lineups", lineups);
+    const isPrimaryArea =
+      primaryTo?.title === thisArea.title ||
+      primaryFrom?.title === thisArea.title;
+    if (isPrimaryArea) return 1;
+
+    const areaIsFrom = areasFrom.some((area) => area.title === thisArea.title);
+    const areaIsTo = areasTo.some((area) => area.title === thisArea.title);
+
+    if (
+      areaIsTo &&
+      primaryFrom &&
+      !primaryTo &&
+      lineupDirection === "startToDestination"
+    ) {
+      const usedInLineup = lineups.some((lineup) => {
+        if (
+          primaryFrom.title === lineup.fromTitle &&
+          lineup.toTitle === thisArea.title
+        ) {
+          return true;
+        }
+        return false;
+      });
+      if (usedInLineup) return 0.5;
+    }
+
+    if (
+      areaIsFrom &&
+      primaryTo &&
+      !primaryFrom &&
+      lineupDirection === "destinationToStart"
+    ) {
+      const usedInLineup = lineups.some((lineup) => {
+        if (
+          primaryTo.title === lineup.toTitle &&
+          lineup.fromTitle === thisArea.title
+        ) {
+          return true;
+        }
+        return false;
+      });
+      if (usedInLineup) return 0.5;
+    }
+
+    if (!primaryTo && !primaryFrom) {
+      if (lineupDirection === "destinationToStart" && areaIsTo) return 0.5;
+      if (lineupDirection === "startToDestination" && areaIsFrom) return 0.5;
+    }
+    return 0;
+  }
+
+  function resetPrimaryAreas() {
+    setPrimaryFrom(null);
+    setPrimaryTo(null);
+  }
+
+  function getCurrentLineup({
+    newAreaTo,
+    newAreaFrom,
+  }: {
+    newAreaTo?: MapArea<ToAreaTitles>;
+    newAreaFrom?: MapArea<FromAreaTitles>;
+  }): Lineup<FromAreaTitles, ToAreaTitles> | null {
+    const lineup = lineups.find(
+      (lineup) =>
+        lineup.fromTitle === (newAreaFrom?.title ?? primaryFrom?.title) &&
+        lineup.toTitle === (newAreaTo?.title ?? primaryTo?.title)
+    );
+    return lineup ?? null;
+  }
 
   return (
     <svg
@@ -272,16 +419,6 @@ const SvgComponent = () => {
             strokeWidth={0.754908}
           />
           <path
-            id="rect2117"
-            d="M601.519 298.873H597.285V322.809H601.519V298.873Z"
-            fill="#FF6600"
-          />
-          <path
-            id="rect2119"
-            d="M604.42 329.484H603.179V334.404H604.42V329.484Z"
-            fill="#FF6600"
-          />
-          <path
             id="path4705"
             d="M543.047 213.127C544.572 213.127 545.808 211.905 545.808 210.398C545.808 208.891 544.572 207.669 543.047 207.669C541.522 207.669 540.286 208.891 540.286 210.398C540.286 211.905 541.522 213.127 543.047 213.127Z"
             fill="#999999"
@@ -361,16 +498,6 @@ const SvgComponent = () => {
             fill="#808080"
           />
           <path
-            id="rect4894"
-            d="M290.8 212.855H288.438V231.367H290.8V212.855Z"
-            fill="#AAD400"
-          />
-          <path
-            id="rect4900"
-            d="M196.047 222.129H192.42V225.004H196.047V222.129Z"
-            fill="#AAD400"
-          />
-          <path
             id="rect4902"
             d="M418.211 249.725L426.071 249.698L426.086 245.513L430.451 245.437V259.722H418.211V249.725Z"
             fill="#999999"
@@ -399,12 +526,6 @@ const SvgComponent = () => {
             id="rect4917"
             d="M605.064 427.619H602.307V437.686H605.064V427.619Z"
             fill="#999999"
-          />
-          <path
-            id="rect4958"
-            d="M564.072 204.196H551.472V206.334H564.072V204.196Z"
-            fill="#00FFFF"
-            fillOpacity={0.471774}
           />
           <path
             id="rect5140"
@@ -1030,27 +1151,36 @@ const SvgComponent = () => {
               <image
                 key={"from " + areaFrom.title}
                 className="cursor-pointer duration-1000"
-                x={areaFrom.x - 5} // todo fix
-                y={areaFrom.y - 5}
-                width={areaFrom.width + 10}
-                height={areaFrom.height + 10}
-                opacity={
-                  primaryFrom === null || areaFrom.title !== primaryFrom.title
-                    ? 0.5
-                    : 1
-                }
-                href="https://i.ibb.co/Qkkt8Db/gekko.png" //todo
-                // fill={fromColor}
+                x={areaFrom.x - 6} // todo fix
+                y={areaFrom.y - 6}
+                width={areaFrom.width + 12}
+                height={areaFrom.height + 12}
+                opacity={getAreaOpacity(areaFrom)}
+                pointerEvents={getAreaOpacity(areaFrom) === 0 ? "none" : "auto"}
+                href={imageMap[agent]}
                 onClick={() => {
-                  const localAreasFrom = [...areasFrom];
+                  const alreadyActive = areaFrom.title === primaryFrom?.title;
+                  if (alreadyActive) {
+                    setPrimaryFrom(null);
+                    setBottomleftImageVideoImages(null);
 
-                  localAreasFrom.forEach((area) => (area.selected = false));
+                    if (lineupDirection === "startToDestination" && primaryFrom)
+                      setPrimaryTo(null);
+
+                    return;
+                  }
+
                   setPrimaryFrom(areaFrom);
-                  // setAreasFrom(localAreasFrom);
 
-                  // If this invalidates the To, remove it.
-                  if (primaryTo === null) return;
-                  if (primaryTo.title !== areaFrom.title) setPrimaryTo(null);
+                  const currentLineup = getCurrentLineup({
+                    newAreaFrom: areaFrom,
+                  });
+                  if (!currentLineup) return;
+
+                  setBottomleftImageVideoImages({
+                    notes: currentLineup.notes,
+                    sources: currentLineup.imageSources,
+                  });
                 }}
               ></image>
             </>
@@ -1059,80 +1189,42 @@ const SvgComponent = () => {
         {areasTo.map((areaTo) => {
           return (
             <>
-              <rect
+              <image
                 key={"to " + areaTo.title}
                 className="cursor-pointer duration-1000"
-                x={areaTo.x}
-                y={areaTo.y}
-                width={areaTo.width}
-                height={areaTo.height}
-                opacity={
-                  primaryFrom === null
-                    ? 0
-                    : primaryTo?.title === areaTo.title
-                    ? 1
-                    : lineups.some(
-                        (lineup) =>
-                          primaryFrom.title === lineup.fromTitle &&
-                          lineup.toTitle === areaTo.title
-                      )
-                    ? 0.5
-                    : 0
-                }
-                fill={toColor}
+                x={areaTo.x - 10}
+                y={areaTo.y - 10}
+                width={areaTo.width + 20}
+                height={areaTo.height + 20}
+                opacity={getAreaOpacity(areaTo)}
+                pointerEvents={getAreaOpacity(areaTo) === 0 ? "none" : "auto"}
+                href={imageMap[util]}
                 onClick={() => {
-                  const localAreasTo = [...areasTo];
+                  const alreadyActive = areaTo.title === primaryTo?.title;
+                  if (alreadyActive) {
+                    setPrimaryTo(null);
+                    setBottomleftImageVideoImages(null);
 
-                  localAreasTo.forEach((area) => (area.selected = false));
+                    if (lineupDirection === "destinationToStart" && primaryTo)
+                      setPrimaryFrom(null);
+
+                    return;
+                  }
+
                   setPrimaryTo(areaTo);
-                  // setAreasTo(localAreasTo);
+
+                  const currentLineup = getCurrentLineup({ newAreaTo: areaTo });
+                  if (!currentLineup) return;
+
+                  setBottomleftImageVideoImages({
+                    notes: currentLineup.notes,
+                    sources: currentLineup.imageSources,
+                  });
                 }}
-              ></rect>
+              ></image>
             </>
           );
         })}
-
-        {/*         
-        {lineups.map((lineup) => (
-          <>
-            <rect
-              id="A Tree"
-              className="cursor-pointer duration-300"
-              x={lineup.from.x}
-              y={lineup.from.y}
-              width={lineup.from.width}
-              height={lineup.from.height}
-              fill="#010BFF"
-              onClick={() => {
-                const localLineups = [...lineups];
-
-                localLineups.forEach((localLineup) => {
-                  if (localLineup.from === lineup.from) {
-                    localLineup.selected = !localLineup.selected;
-                  }
-                });
-
-                setLineups(localLineups);
-              }}
-            />
-            <>
-              {lineup.to.map((to) => (
-                <rect
-                  id="A Tree"
-                  className={`duration-500 ${
-                    lineup.selected ? "opacity-100" : "opacity-0"
-                  }`}
-                  x={to.x}
-                  y={to.y}
-                  width={to.width}
-                  height={to.height}
-                  fill="#FF0000"
-                />
-              ))}
-            </>
-          </>
-        ))}
-        */}
       </g>
     </svg>
   );
