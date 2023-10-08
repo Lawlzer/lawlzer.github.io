@@ -1,11 +1,14 @@
-show image/video
-turn blue blob into agent image
-map/agent selection?
+Show something on hovering of lineup elements? fml lol
 
-only show positions if there are relevant lineups available, otherwise grayed out?
-Make hidden elements unclickable
-className={`cursor-pointer duration-1000 ${""}`}
-className="cursor-pointer duration-1000 pointer-events-non"
+Fix image fullscreen
+
+Make images load faster
+
+Ensure Text is always shown
+
+Recon dart needs a better image
+
+Move the setFunctions to parent element and pass them as props, so we can remove the "primary" states when agent/util is changed.
 
 https://www.figma.com/file/T1ZcC1Hrpx2wxbfvn3y6Au/Temp?type=design&node-id=2-527&mode=design&t=rgtFrel6ZJqbxrn4-0
 
