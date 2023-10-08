@@ -55,14 +55,19 @@ function App() {
   const [bottomleftImageVideo, setBottomleftImageVideoImages] =
     useState<BottomleftImageVideo>();
 
-  const [isFullScreen, setIsFullScreen] = useState(false);
-
-  const toggleFullScreen = () => {
-    setIsFullScreen(!isFullScreen);
-  };
+  const [fullscreen, setFullscreen] = useState<string>();
 
   return (
     <div className="flex items-stretch w-screen h-screen max-w-full bg-gray-800">
+      {fullscreen && (
+        <div
+          className="w-screen h-screen absolute top-0 left-0 cursor-pointer flex"
+          onClick={() => setFullscreen(undefined)}
+        >
+          <img src={fullscreen} className="w-full h-full p-10 absolute z-10" />
+          <div className="w-full h-full bg-black opacity-80 absolute z-0"></div>
+        </div>
+      )}
       <div className="w-[30%] text-opacity-0 flex flex-col items-stretch">
         {/* Maps */}
         <div className="align-middle p-auto flex justify-center w-full flex-wrap px-5">
@@ -131,11 +136,16 @@ function App() {
         </div>
 
         {/* Image/video sources */}
-        <div className="mt-3" onClick={toggleFullScreen}>
+        <div className="mt-3">
           {bottomleftImageVideo?.sources.map((sourceUrl, index) => (
             <>
               <div className="text-xl font-bold mr-3"></div>
-              <img src={sourceUrl} alt={`Image ${index + 1}`} className="" />
+              <img
+                src={sourceUrl}
+                alt={`Image ${index + 1}`}
+                className="cursor-pointer"
+                onClick={() => setFullscreen(sourceUrl)}
+              />
               {/* <div className="text-xl font-bold"></div>
               <img src={sourceUrl} alt={`Image ${index + 1}`} className="" /> */}
             </>
