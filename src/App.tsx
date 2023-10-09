@@ -2,7 +2,24 @@ import react, { useEffect, useState } from "react";
 
 import Ascent from "./maps/ascent/map";
 import Breeze from "./maps/breeze/map";
-import { type Agent, agentUtilityMap, agents, Utility } from "./types";
+
+import {
+  type Agent,
+  agentUtilityMap,
+  agents,
+  Utility,
+  MapArea,
+  Lineup,
+  imageMap,
+} from "./types";
+import {
+  FromAreaTitles,
+  ToAreaTitles,
+  areasFrom,
+  areasTo,
+} from "./maps/ascent/lineups";
+import { lineups } from "./maps/ascent/lineups";
+import { useMapMap } from "./hooks/useMapMap";
 
 const maps = [
   "Ascent",
@@ -56,6 +73,179 @@ function App() {
     useState<BottomleftImageVideo>();
 
   const [fullscreen, setFullscreen] = useState<string>();
+
+  const [primaryTo, setPrimaryTo] = useState<MapArea<ToAreaTitles> | null>(
+    null
+  );
+  const [primaryFrom, setPrimaryFrom] =
+    useState<MapArea<FromAreaTitles> | null>(null);
+
+  const mapMap = useMapMap(newBuildTo, newBuildFrom);
+  function getAreaOpacity(thisArea: MapArea<string>): number {
+    const areaIsUsedInLineup = lineups.some((lineup) => {
+      if (
+        lineup.agent === agent &&
+        lineup.util === utility &&
+        (lineup.fromTitle === thisArea.title ||
+          lineup.toTitle === thisArea.title)
+      ) {
+        return true;
+      }
+      return false;
+    });
+    if (!areaIsUsedInLineup) return 0;
+
+    const isPrimaryArea =
+      primaryTo?.title === thisArea.title ||
+      primaryFrom?.title === thisArea.title;
+    if (isPrimaryArea) return 1;
+
+    const areaIsFrom = areasFrom.some((area) => area.title === thisArea.title);
+    const areaIsTo = areasTo.some((area) => area.title === thisArea.title);
+
+    if (
+      areaIsTo &&
+      primaryFrom &&
+      !primaryTo &&
+      lineupDirection === "startToDestination"
+    ) {
+      const usedInLineup = lineups.some((lineup) => {
+        if (
+          primaryFrom.title === lineup.fromTitle &&
+          lineup.toTitle === thisArea.title
+        ) {
+          return true;
+        }
+        return false;
+      });
+      if (usedInLineup) return 0.5;
+    }
+
+    if (
+      areaIsFrom &&
+      primaryTo &&
+      !primaryFrom &&
+      lineupDirection === "destinationToStart"
+    ) {
+      const usedInLineup = lineups.some((lineup) => {
+        if (
+          primaryTo.title === lineup.toTitle &&
+          lineup.fromTitle === thisArea.title
+        ) {
+          return true;
+        }
+        return false;
+      });
+      if (usedInLineup) return 0.5;
+    }
+
+    if (!primaryTo && !primaryFrom) {
+      if (lineupDirection === "destinationToStart" && areaIsTo) return 0.5;
+      if (lineupDirection === "startToDestination" && areaIsFrom) return 0.5;
+    }
+    return 0;
+  }
+
+  function newBuildFrom(): React.ReactNode {
+    return areasFrom.map((areaFrom) => {
+      return (
+        <>
+          <image
+            key={"from " + areaFrom.title}
+            className="cursor-pointer duration-1000"
+            x={areaFrom.x - 6} // todo fix
+            y={areaFrom.y - 6}
+            width={areaFrom.width + 12}
+            height={areaFrom.height + 12}
+            opacity={getAreaOpacity(areaFrom)}
+            pointerEvents={getAreaOpacity(areaFrom) === 0 ? "none" : "auto"}
+            href={imageMap[agent]}
+            onClick={() => {
+              const alreadyActive = areaFrom.title === primaryFrom?.title;
+              if (alreadyActive) {
+                setPrimaryFrom(null);
+                setBottomleftImageVideoImages(null);
+
+                if (lineupDirection === "startToDestination" && primaryFrom)
+                  setPrimaryTo(null);
+
+                return;
+              }
+
+              setPrimaryFrom(areaFrom);
+
+              const currentLineup = getCurrentLineup({
+                newAreaFrom: areaFrom,
+              });
+              if (!currentLineup) return;
+
+              setBottomleftImageVideoImages({
+                notes: currentLineup.notes,
+                sources: currentLineup.imageSources,
+              });
+            }}
+          ></image>
+        </>
+      );
+    });
+  }
+
+  function newBuildTo(): React.ReactNode {
+    return areasTo.map((areaTo) => {
+      return (
+        <>
+          <image
+            key={"to " + areaTo.title}
+            className="cursor-pointer duration-1000"
+            x={areaTo.x - 10}
+            y={areaTo.y - 10}
+            width={areaTo.width + 20}
+            height={areaTo.height + 20}
+            opacity={getAreaOpacity(areaTo)}
+            pointerEvents={getAreaOpacity(areaTo) === 0 ? "none" : "auto"}
+            href={imageMap[utility]}
+            onClick={() => {
+              const alreadyActive = areaTo.title === primaryTo?.title;
+              if (alreadyActive) {
+                setPrimaryTo(null);
+                setBottomleftImageVideoImages(null);
+
+                if (lineupDirection === "destinationToStart" && primaryTo)
+                  setPrimaryFrom(null);
+
+                return;
+              }
+
+              setPrimaryTo(areaTo);
+
+              const currentLineup = getCurrentLineup({ newAreaTo: areaTo });
+              if (!currentLineup) return;
+
+              setBottomleftImageVideoImages({
+                notes: currentLineup.notes,
+                sources: currentLineup.imageSources,
+              });
+            }}
+          ></image>
+        </>
+      );
+    });
+  }
+
+  function getCurrentLineup({
+    newAreaTo,
+    newAreaFrom,
+  }: {
+    newAreaTo?: MapArea<ToAreaTitles>;
+    newAreaFrom?: MapArea<FromAreaTitles>;
+  }): Lineup<FromAreaTitles, ToAreaTitles> | null {
+    const lineup = lineups.find(
+      (lineup) =>
+        lineup.fromTitle === (newAreaFrom?.title ?? primaryFrom?.title) &&
+        lineup.toTitle === (newAreaTo?.title ?? primaryTo?.title)
+    );
+    return lineup ?? null;
+  }
 
   return (
     <div className="flex items-stretch w-screen h-screen max-w-full bg-gray-800">
@@ -174,57 +364,13 @@ function App() {
       <div className="flex-1 flex items-center justify-center">
         {/* Render the selected map */}
 
-        {map === "Ascent" && (
-          <Ascent
-            agent={agent}
-            util={utility}
-            lineupDirection={lineupDirection}
-            setBottomleftImageVideoImages={setBottomleftImageVideoImages}
-          />
-        )}
-
-        {map === "Breeze" && (
-          <Breeze
-            agent={agent}
-            util={utility}
-            lineupDirection={lineupDirection}
-            setBottomleftImageVideoImages={setBottomleftImageVideoImages}
-          />
-        )}
-
-        {/* {map === "Split" && <Split />}
-        {map === "Haven" && <Haven />} */}
+        {/* {map === "Ascent" && (
+          <Ascent newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />
+        )} */}
+        {/* {<Ascent newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />} */}
+        {mapMap[map]}
       </div>
     </div>
   );
 }
 export default App;
-
-// <div className="w-1/2">
-// {/* Render images and/or videos */}
-// {true && (
-//   <div>
-//     <h2 className="text-xl font-bold">Images</h2>
-//     {bottomleftImageVideo?.sources.map((source, index) => (
-//       <img
-//         key={index}
-//         src={source}
-//         alt={`Image ${index + 1}`}
-//         className="w-full"
-//       />
-//     ))}
-//   </div>
-// )}
-
-// {false && (
-//   <div>
-//     <h2 className="text-xl font-bold">Videos</h2>
-//     {bottomleftImageVideo?.sources.map((source, index) => (
-//       <video key={index} controls className="w-full">
-//         <source src={source} type="video/mp4" />
-//         Your browser does not support the video tag.
-//       </video>
-//     ))}
-//   </div>
-// )}
-// </div>

@@ -6,9 +6,13 @@ Make images load faster
 
 Ensure Text is always shown
 
+Move Text to be per-image, not per-lineup? Or implement both?
+
 Recon dart needs a better image
 
 Move the setFunctions to parent element and pass them as props, so we can remove the "primary" states when agent/util is changed.
+
+Use hooks to solve the:tm: issue
 
 https://www.figma.com/file/T1ZcC1Hrpx2wxbfvn3y6Au/Temp?type=design&node-id=2-527&mode=design&t=rgtFrel6ZJqbxrn4-0
 
