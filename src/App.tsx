@@ -232,6 +232,12 @@ function App() {
     });
   }
 
+  function resetLineup() {
+    setPrimaryTo(null);
+    setPrimaryFrom(null);
+    setBottomleftImageVideoImages(null);
+  }
+
   function getCurrentLineup({
     newAreaTo,
     newAreaFrom,
@@ -266,7 +272,10 @@ function App() {
               <CustomButton
                 mapName={thisMap}
                 isSelected={thisMap === map}
-                onClick={() => setMap(thisMap)}
+                onClick={() => {
+                  setMap(thisMap);
+                  resetLineup();
+                }}
               />
             </div>
           ))}
@@ -283,6 +292,7 @@ function App() {
                   onClick={() => {
                     setAgent(agentName);
                     setUtility(agentUtilityMap[agentName][0]);
+                    resetLineup();
                   }}
                 />
               </div>
@@ -300,6 +310,7 @@ function App() {
                   isSelected={localUtility === utility}
                   onClick={() => {
                     setUtility(localUtility);
+                    resetLineup();
                   }}
                 />
               </div>
@@ -313,14 +324,20 @@ function App() {
             <CustomButton
               mapName={"Start -> Destination"}
               isSelected={lineupDirection === "startToDestination"}
-              onClick={() => setLineupDirection("startToDestination")}
+              onClick={() => {
+                setLineupDirection("startToDestination");
+                resetLineup();
+              }}
             />
           </div>
           <div className="">
             <CustomButton
               mapName={"Destination -> Start"}
               isSelected={lineupDirection === "destinationToStart"}
-              onClick={() => setLineupDirection("destinationToStart")}
+              onClick={() => {
+                setLineupDirection("destinationToStart");
+                resetLineup();
+              }}
             />
           </div>
         </div>
@@ -363,11 +380,6 @@ function App() {
       </div>
       <div className="flex-1 flex items-center justify-center">
         {/* Render the selected map */}
-
-        {/* {map === "Ascent" && (
-          <Ascent newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />
-        )} */}
-        {/* {<Ascent newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />} */}
         {mapMap[map]}
       </div>
     </div>
