@@ -4,6 +4,26 @@ import type { Lineup } from "../../types";
 
 import { type Agent, imageMap, type MapArea, Utility } from "../../types";
 
+import image1 from "./images/1.png";
+import image2 from "./images/2.png";
+import image3 from "./images/3.png";
+import image4 from "./images/4.png";
+import image5 from "./images/5.png";
+import image6 from "./images/6.png";
+import image7 from "./images/7.png";
+import image8 from "./images/8.png";
+import image9 from "./images/9.png";
+import image10 from "./images/10.png";
+import image11 from "./images/11.png";
+import image12 from "./images/12.png";
+import image13 from "./images/13.png";
+import image14 from "./images/14.png";
+import image15 from "./images/15.png";
+import image16 from "./images/16.png";
+import image17 from "./images/17.png";
+import image18 from "./images/18.png";
+import image19 from "./images/19.png";
+
 export const areasFrom = [
   {
     title: "A TreeHouse Box",
@@ -117,9 +137,18 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "A CT Corner",
     toTitle: "A Outside Gen",
 
-    notes: [],
-    imageSources: ["https://i.ibb.co/QbtyfBn/3.png"],
+    imageStuff: [
+      {
+        image: image1,
+        notes: ["hello world", "hello world 2!", "hello world 3"],
+      },
+      {
+        image: image1,
+        notes: ["hello world1", "hello world 21!", "hello world 31"],
+      },
+    ],
   },
+
   {
     map: "Ascent",
     agent: "Gekko",
@@ -128,8 +157,7 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "A Main Box",
     toTitle: "A Outside Gen",
 
-    notes: ["Q under Double-Dash Thing"],
-    imageSources: ["https://i.ibb.co/Kw3rZFL/image.png"],
+    imageStuff: [{ image: image2, notes: ["Q under Double-Dash Thing"] }],
   },
   {
     map: "Ascent",
@@ -139,9 +167,14 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "A Mid Boxes",
     toTitle: "A Outside Gen",
 
-    notes: ["Hug the tiny box (must be up on ONE stair!)"],
-    imageSources: ["https://i.ibb.co/S5kSxNM/Hug-tiny-box-up-on-1-stair.png"],
+    imageStuff: [
+      {
+        image: image3,
+        notes: ["Hug the tiny box (must be up on ONE stair!)"],
+      },
+    ],
   },
+
   {
     map: "Ascent",
     agent: "Gekko",
@@ -150,13 +183,23 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "A TreeHouse Box",
     toTitle: "A Wine",
 
-    notes: [
-      "Throw at 9s",
-      "Stand to the RIGHT SIDE of the box",
-      "Insta-jump throw",
+    imageStuff: [
+      {
+        image: image4,
+        notes: [
+          "Throw at 9s",
+          "Stand to the RIGHT SIDE of the box",
+          "Insta-jump throw",
+        ],
+      },
+
+      {
+        image: image5,
+        notes: [],
+      },
     ],
-    imageSources: ["https://i.ibb.co/4Yn0vMf/9s-kj-side-of-box-JUMP-THROW.png"],
   },
+
   {
     map: "Ascent",
     agent: "Gekko",
@@ -165,9 +208,9 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "B Main Box",
     toTitle: "B Opposite Lane",
 
-    notes: [],
-    imageSources: ["https://i.ibb.co/m9bsCk8/Insta-jumpthrow.png"],
+    imageStuff: [{ image: image6, notes: ["Insta-jump throw"] }],
   },
+
   {
     map: "Ascent",
     agent: "Gekko",
@@ -176,8 +219,7 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "B Main Box",
     toTitle: "B Default Box",
 
-    notes: [],
-    imageSources: ["https://i.ibb.co/SxKTJMb/B-Middle.png"],
+    imageStuff: [{ image: image7, notes: ["Stand-throw"] }],
   },
   {
     map: "Ascent",
@@ -187,11 +229,17 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "CT Triple Barrels",
     toTitle: "B Default Box",
 
-    notes: ["Insta jump-throw"],
-    imageSources: [
-      "https://i.ibb.co/SsHtnHP/Jump-instant-throw-Hug-barrels.png",
+    imageStuff: [
+      {
+        image: image8,
+        notes: [
+          "Lineup above lower spike, and to the left of the other one",
+          "Insta jump-throw",
+        ],
+      },
     ],
   },
+
   {
     map: "Ascent",
     agent: "Gekko",
@@ -200,9 +248,9 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "B Main Box",
     toTitle: "B Far Box",
 
-    notes: [],
-    imageSources: ["https://i.ibb.co/jv4YmMk/B-Box.png"],
+    imageStuff: [{ image: image9, notes: [] }],
   },
+
   {
     map: "Ascent",
     agent: "Gekko",
@@ -211,8 +259,12 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "B Main Box",
     toTitle: "B Opposite Lane",
 
-    notes: ["Turret bullet touching <that thing>"],
-    imageSources: ["https://i.ibb.co/fdnb4R2/image.png"],
+    imageStuff: [
+      {
+        image: image10,
+        notes: ["Jump insta-throw", "Turret bullet touching <that thing>"],
+      },
+    ],
   },
   {
     map: "Ascent",
@@ -222,9 +274,9 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "A Main Box",
     toTitle: "A Generator",
 
-    notes: ["Aim directly at peak of spike"],
-    imageSources: ["https://i.ibb.co/Brkn86K/image.png"],
+    imageStuff: [{ image: image11, notes: ["Aim directly at peak of spike"] }],
   },
+
   {
     map: "Ascent",
     agent: "Gekko",
@@ -233,8 +285,15 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "A Main Box",
     toTitle: "A Dice",
 
-    notes: ["Aim directly at peak of spike"],
-    imageSources: ["https://i.ibb.co/Brkn86K/image.png"],
+    imageStuff: [
+      {
+        image: image12,
+        notes: [
+          "Aim directly at peak of spike",
+          "Stand-throw, or jump-peak-throw (to land on the box)",
+        ],
+      },
+    ],
   },
   {
     map: "Ascent",
@@ -244,8 +303,9 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "A Mid Boxes",
     toTitle: "A Dice",
 
-    notes: ["Insta jump-throw", "Aim middle-ish of box"],
-    imageSources: ["https://i.ibb.co/0FxFnJt/image.png"],
+    imageStuff: [
+      { image: image13, notes: ["Insta jump-throw", "Aim middle-ish of box"] },
+    ],
   },
   {
     map: "Ascent",
@@ -255,8 +315,7 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "A CT Corner",
     toTitle: "A Outside Gen",
 
-    notes: ["Aim horizontal of yellow bar", "E vertical with this thing"],
-    imageSources: ["https://i.ibb.co/DGLYn3c/image.png"],
+    imageStuff: [{ image: image15, notes: [] }],
   },
   {
     map: "Ascent",
@@ -266,22 +325,39 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     fromTitle: "A CT Corner",
     toTitle: "A Generator",
 
-    notes: ["Turret Bullet against this corner"],
-    imageSources: ["https://i.ibb.co/CsHZ81x/image.png"],
-  },
-  {
-    map: "Ascent",
-    agent: "Gekko",
-    util: "Mosh Pit",
-
-    fromTitle: "A CT Corner",
-    toTitle: "A Dice",
-
-    notes: ["Turret Bullet against this corner"],
-    imageSources: ["https://i.ibb.co/CsHZ81x/image.png"],
+    imageStuff: [
+      { image: image14, notes: ["Turret Bullet against this corner"] },
+    ],
   },
 ];
 
 export type FromAreaTitles = (typeof areasFrom)[number]["title"];
 export type ToAreaTitles = (typeof areasTo)[number]["title"];
 export type AllAreaTitles = FromAreaTitles | ToAreaTitles;
+
+let temp: MapArea<AllAreaTitles>[] = [...areasFrom, ...areasTo];
+
+for (let i = 0; i < lineups.length; i++) {
+  for (let j = i + 1; j < lineups.length; j++) {
+    if (
+      lineups[i].fromTitle === lineups[j].fromTitle &&
+      lineups[i].toTitle === lineups[j].toTitle
+    ) {
+      console.warn(
+        "Duplicate lineup FROM and TO detected: ",
+        lineups[i],
+        lineups[j]
+      );
+    }
+  }
+}
+
+// for (let i = 0; i < lineups.length; i++) {
+//   for (let j = i + 1; j < lineups.length; j++) {
+//     for (const imgUrl of lineups[i].imageSources) {
+//       if (lineups[j].imageSources.includes(imgUrl)) {
+//         console.debug("Duplicate lineup image detected: ", imgUrl);
+//       }
+//     }
+//   }
+// }

@@ -1,8 +1,5 @@
 import react, { useEffect, useState } from "react";
 
-import Ascent from "./maps/ascent/map";
-import Breeze from "./maps/breeze/map";
-
 import {
   type Agent,
   agentUtilityMap,
@@ -18,7 +15,6 @@ import {
   areasFrom,
   areasTo,
 } from "./maps/ascent/lineups";
-import { lineups } from "./maps/ascent/lineups";
 import { useMapMap } from "./hooks/useMapMap";
 
 const maps = [
@@ -56,10 +52,10 @@ function CustomButton({
   );
 }
 
-export type BottomleftImageVideo = {
-  notes: string[];
-  sources: string[];
-} | null;
+export interface BottomleftImageVideo {
+  notes: [] | [string, string] | [string] | [string, string, string];
+  image: string;
+}
 
 export type LineupDirection = "destinationToStart" | "startToDestination";
 function App() {
@@ -67,10 +63,11 @@ function App() {
   const [agent, setAgent] = useState<Agent>("Gekko");
   const [utility, setUtility] = useState<Utility>("Mosh Pit");
   const [lineupDirection, setLineupDirection] =
-    useState<LineupDirection>("startToDestination");
+    useState<LineupDirection>("destinationToStart");
 
-  const [bottomleftImageVideo, setBottomleftImageVideoImages] =
-    useState<BottomleftImageVideo>();
+  const [bottomleftImageVideo, setBottomleftImageVideoImages] = useState<
+    BottomleftImageVideo[] | null
+  >();
 
   const [fullscreen, setFullscreen] = useState<string>();
 
@@ -81,18 +78,41 @@ function App() {
     useState<MapArea<FromAreaTitles> | null>(null);
 
   const mapMap = useMapMap(newBuildTo, newBuildFrom);
-  function getAreaOpacity(thisArea: MapArea<string>): number {
-    const areaIsUsedInLineup = lineups.some((lineup) => {
-      if (
-        lineup.agent === agent &&
-        lineup.util === utility &&
-        (lineup.fromTitle === thisArea.title ||
-          lineup.toTitle === thisArea.title)
-      ) {
-        return true;
-      }
-      return false;
+
+  function preloadImages() {
+    const lineups = mapMap[map].lineups;
+
+    lineups.forEach((lineup: Lineup<any, any>) => {
+      lineup?.imageStuff?.forEach(
+        (image) =>
+          new Promise((resolve) => {
+            const img = new Image();
+
+            (img as any).src = image?.image;
+            img.onload = () => resolve(img);
+          })
+      );
     });
+  }
+
+  useEffect(() => {
+    preloadImages();
+  }, [map, agent, utility]);
+
+  function getAreaOpacity(thisArea: MapArea<string>): number {
+    const areaIsUsedInLineup = mapMap[map].lineups.some(
+      (lineup: Lineup<any, any>) => {
+        if (
+          lineup.agent === agent &&
+          lineup.util === utility &&
+          (lineup.fromTitle === thisArea.title ||
+            lineup.toTitle === thisArea.title)
+        ) {
+          return true;
+        }
+        return false;
+      }
+    );
     if (!areaIsUsedInLineup) return 0;
 
     const isPrimaryArea =
@@ -109,15 +129,17 @@ function App() {
       !primaryTo &&
       lineupDirection === "startToDestination"
     ) {
-      const usedInLineup = lineups.some((lineup) => {
-        if (
-          primaryFrom.title === lineup.fromTitle &&
-          lineup.toTitle === thisArea.title
-        ) {
-          return true;
+      const usedInLineup = mapMap[map].lineups.some(
+        (lineup: Lineup<any, any>) => {
+          if (
+            primaryFrom.title === lineup.fromTitle &&
+            lineup.toTitle === thisArea.title
+          ) {
+            return true;
+          }
+          return false;
         }
-        return false;
-      });
+      );
       if (usedInLineup) return 0.5;
     }
 
@@ -127,15 +149,17 @@ function App() {
       !primaryFrom &&
       lineupDirection === "destinationToStart"
     ) {
-      const usedInLineup = lineups.some((lineup) => {
-        if (
-          primaryTo.title === lineup.toTitle &&
-          lineup.fromTitle === thisArea.title
-        ) {
-          return true;
+      const usedInLineup = mapMap[map].lineups.some(
+        (lineup: Lineup<any, any>) => {
+          if (
+            primaryTo.title === lineup.toTitle &&
+            lineup.fromTitle === thisArea.title
+          ) {
+            return true;
+          }
+          return false;
         }
-        return false;
-      });
+      );
       if (usedInLineup) return 0.5;
     }
 
@@ -178,11 +202,7 @@ function App() {
                 newAreaFrom: areaFrom,
               });
               if (!currentLineup) return;
-
-              setBottomleftImageVideoImages({
-                notes: currentLineup.notes,
-                sources: currentLineup.imageSources,
-              });
+              setBottomleftImageVideoImages(currentLineup.imageStuff);
             }}
           ></image>
         </>
@@ -221,10 +241,7 @@ function App() {
               const currentLineup = getCurrentLineup({ newAreaTo: areaTo });
               if (!currentLineup) return;
 
-              setBottomleftImageVideoImages({
-                notes: currentLineup.notes,
-                sources: currentLineup.imageSources,
-              });
+              setBottomleftImageVideoImages(currentLineup.imageStuff);
             }}
           ></image>
         </>
@@ -245,8 +262,8 @@ function App() {
     newAreaTo?: MapArea<ToAreaTitles>;
     newAreaFrom?: MapArea<FromAreaTitles>;
   }): Lineup<FromAreaTitles, ToAreaTitles> | null {
-    const lineup = lineups.find(
-      (lineup) =>
+    const lineup = mapMap[map].lineups.find(
+      (lineup: Lineup<any, any>) =>
         lineup.fromTitle === (newAreaFrom?.title ?? primaryFrom?.title) &&
         lineup.toTitle === (newAreaTo?.title ?? primaryTo?.title)
     );
@@ -343,44 +360,31 @@ function App() {
         </div>
 
         {/* Image/video sources */}
-        <div className="mt-3">
-          {bottomleftImageVideo?.sources.map((sourceUrl, index) => (
+        <div className="mt-4 flex flex-col">
+          {bottomleftImageVideo?.map((imageData, index) => (
             <>
-              <div className="text-xl font-bold mr-3"></div>
               <img
-                src={sourceUrl}
+                src={imageData.image}
                 alt={`Image ${index + 1}`}
-                className="cursor-pointer"
-                onClick={() => setFullscreen(sourceUrl)}
+                className="cursor-pointer w-9/12 mx-auto mb-1"
+                onClick={() => setFullscreen(imageData.image)}
               />
-              {/* <div className="text-xl font-bold"></div>
-              <img src={sourceUrl} alt={`Image ${index + 1}`} className="" /> */}
+              {imageData?.notes.map((note) => {
+                return (
+                  <div className="text-white text-center font-medium text-sm">
+                    • {note}
+                  </div>
+                );
+              })}
+              <div className="mb-4"></div>
             </>
           ))}
         </div>
-
-        {/* Image/video notes */}
-        <div className="w-full px-4 py-0 mt-0 flex-1">
-          {/* <div className="text-xl font-bold text-center text-white">
-            {bottomleftImageVideo?.notes?.length ? "Notes" : ""}
-          </div> */}
-          <div className="">
-            {bottomleftImageVideo?.notes.map((note, index, original) => (
-              <div
-                key={index}
-                className={`${
-                  index !== original.length - 1
-                } text-white text-center`}
-              >
-                • {note}
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
+
       <div className="flex-1 flex items-center justify-center">
         {/* Render the selected map */}
-        {mapMap[map]}
+        {mapMap[map].svg}
       </div>
     </div>
   );

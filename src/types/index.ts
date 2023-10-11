@@ -1,3 +1,10 @@
+import { BottomleftImageVideo } from "../App";
+
+import GekkoImage from "../assets/Gekko.png";
+import SovaImage from "../assets/Sova.png";
+import MoshPitImage from "../assets/MoshPit.png";
+import ShockDartImage from "../assets/ShockDart.png";
+import ReconDartImage from "../assets/ReconDart.png";
 export interface MapArea<Titles extends String> {
   title: Titles;
   x: number;
@@ -14,16 +21,15 @@ export interface Lineup<FromAreaTitles, ToAreaTitles> {
   fromTitle: FromAreaTitles;
   toTitle: ToAreaTitles;
 
-  notes: string[];
-  imageSources: [] | [string, string] | [string];
+  imageStuff: BottomleftImageVideo[];
 }
 
 export const imageMap = {
-  Gekko: "https://i.ibb.co/PjrxpnH/image.png",
-  Sova: "https://i.ibb.co/x33m7sW/Valorant-Sova-Guide-fotor-bg-remover-20230927223544.png",
-  "Mosh Pit": "https://i.ibb.co/LpJSDr1/moshPit.png",
-  "Shock Dart": "https://i.ibb.co/GcVMqj2/Screenshot-5-modified.png",
-  "Recon Dart": "https://i.ibb.co/GcVMqj2/Screenshot-5-modified.png", // https://i.ibb.co/5kpdtr1/mediamodifier-cropped-image.png
+  Gekko: GekkoImage,
+  Sova: SovaImage,
+  "Mosh Pit": MoshPitImage,
+  "Shock Dart": ShockDartImage,
+  "Recon Dart": ReconDartImage, // todo
 } as const;
 
 export const agentUtilityMap = {
