@@ -1,26 +1,21 @@
 import Ascent from "../maps/ascent/map";
+import * as ascentLineups from "../maps/ascent/lineups";
+import Bind from "../maps/bind/map";
+import * as bindLineups from "../maps/bind/lineups";
+
 import Todo from "../maps/todo/map";
-import {
-  lineups as ascentLineups,
-  areasFrom as ascentAreasFrom,
-  areasTo as ascentAreasTo,
-} from "../maps/ascent/lineups";
 // import Breeze from "../maps/breeze/map";
 
 export const useMapMap = (newBuildTo: any, newBuildFrom: any) => {
   const map: { [key: string]: any } = {
     Ascent: {
       svg: <Ascent newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />,
-      lineups: ascentLineups,
-      areasFrom: ascentAreasFrom,
-      areasTo: ascentAreasTo,
+      ...ascentLineups,
     },
     // Breeze: <Breeze newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />,
     Bind: {
-      svg: <Todo />,
-      lineups: [],
-      areasFrom: [],
-      areasTo: [],
+      svg: <Bind newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />,
+      ...bindLineups,
     },
     Breeze: {
       svg: <Todo />,
