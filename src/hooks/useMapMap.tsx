@@ -2,6 +2,8 @@ import Ascent from "../maps/ascent/map";
 import * as ascentLineups from "../maps/ascent/lineups";
 import Bind from "../maps/bind/map";
 import * as bindLineups from "../maps/bind/lineups";
+import Breeze from "../maps/breeze/map";
+import * as breezeLineups from "../maps/breeze/lineups";
 
 import Todo from "../maps/todo/map";
 // import Breeze from "../maps/breeze/map";
@@ -18,11 +20,10 @@ export const useMapMap = (newBuildTo: any, newBuildFrom: any) => {
       ...bindLineups,
     },
     Breeze: {
-      svg: <Todo />,
-      lineups: [],
-      areasFrom: [],
-      areasTo: [],
+      svg: <Breeze newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />,
+      ...breezeLineups,
     },
+
     Fracture: {
       svg: <Todo />,
       lineups: [],
