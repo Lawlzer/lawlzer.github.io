@@ -14,6 +14,7 @@ export interface MapArea<Titles extends String> {
 }
 
 export interface Lineup<FromAreaTitles, ToAreaTitles> {
+export interface Lineup<FromAreaTitles, ToAreaTitles> {
   map: string;
   agent: Agent;
   util: string;

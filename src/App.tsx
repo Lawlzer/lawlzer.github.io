@@ -390,3 +390,32 @@ function App() {
   );
 }
 export default App;
+
+// <div className="w-1/2">
+// {/* Render images and/or videos */}
+// {true && (
+//   <div>
+//     <h2 className="text-xl font-bold">Images</h2>
+//     {bottomleftImageVideo?.sources.map((source, index) => (
+//       <img
+//         key={index}
+//         src={source}
+//         alt={`Image ${index + 1}`}
+//         className="w-full"
+//       />
+//     ))}
+//   </div>
+// )}
+
+// {false && (
+//   <div>
+//     <h2 className="text-xl font-bold">Videos</h2>
+//     {bottomleftImageVideo?.sources.map((source, index) => (
+//       <video key={index} controls className="w-full">
+//         <source src={source} type="video/mp4" />
+//         Your browser does not support the video tag.
+//       </video>
+//     ))}
+//   </div>
+// )}
+// </div>
