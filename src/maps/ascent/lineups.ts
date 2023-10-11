@@ -134,26 +134,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     agent: "Gekko",
     util: "Mosh Pit",
 
-    fromTitle: "A CT Corner",
-    toTitle: "A Outside Gen",
-
-    imageStuff: [
-      {
-        image: image1,
-        notes: ["hello world", "hello world 2!", "hello world 3"],
-      },
-      {
-        image: image1,
-        notes: ["hello world1", "hello world 21!", "hello world 31"],
-      },
-    ],
-  },
-
-  {
-    map: "Ascent",
-    agent: "Gekko",
-    util: "Mosh Pit",
-
     fromTitle: "A Main Box",
     toTitle: "A Outside Gen",
 
