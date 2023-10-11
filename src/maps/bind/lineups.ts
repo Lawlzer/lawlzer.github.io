@@ -105,7 +105,6 @@ export const areasTo = [
 
 export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -120,7 +119,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     ],
   },
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -135,7 +133,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     ],
   },
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -151,7 +148,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   },
 
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -166,7 +162,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     ],
   },
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -182,7 +177,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   },
 
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -202,7 +196,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   },
 
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -217,7 +210,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     ],
   },
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -240,7 +232,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     ],
   },
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -263,7 +254,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     ],
   },
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 

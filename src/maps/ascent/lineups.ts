@@ -130,7 +130,6 @@ export const areasTo = [
 
 export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -140,7 +139,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     imageStuff: [{ image: image2, notes: ["Q under Double-Dash Thing"] }],
   },
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -156,7 +154,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   },
 
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -181,7 +178,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   },
 
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -192,7 +188,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   },
 
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -202,7 +197,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     imageStuff: [{ image: image7, notes: ["Stand-throw"] }],
   },
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -221,7 +215,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   },
 
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -232,7 +225,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   },
 
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -247,7 +239,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     ],
   },
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -258,7 +249,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   },
 
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -276,7 +266,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     ],
   },
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -288,7 +277,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     ],
   },
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
@@ -298,7 +286,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     imageStuff: [{ image: image15, notes: [] }],
   },
   {
-    map: "Ascent",
     agent: "Gekko",
     util: "Mosh Pit",
 
