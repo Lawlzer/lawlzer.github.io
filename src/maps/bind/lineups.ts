@@ -3,7 +3,7 @@ import path from "path";
 import type { Lineup } from "../../types";
 
 import { type Agent, imageMap, type MapArea, Utility } from "../../types";
-
+import { Writeable } from "../../types";
 import image1 from "./images/1.png";
 import image2 from "./images/2.png";
 import image3 from "./images/3.png";
@@ -18,13 +18,8 @@ import image11 from "./images/11.png";
 import image12 from "./images/12.png";
 import image13 from "./images/13.png";
 import image14 from "./images/14.png";
-import image15 from "./images/15.png";
-import image16 from "./images/16.png";
-import image17 from "./images/17.png";
-import image18 from "./images/18.png";
-import image19 from "./images/19.png";
 
-export const areasFrom = [
+const tempAreasFrom = [
   {
     title: "A Long Corner",
     x: 686,
@@ -60,9 +55,13 @@ export const areasFrom = [
     width: 12,
     height: 12,
   },
-] as const; // Ideally we would ensure this satisfies MapArea[] but that is extremely hard to do
+] as const; // We have to declare as const to type-check the titles.
 
-export const areasTo = [
+export const areasFrom: MapArea<string>[] = tempAreasFrom as Writeable<
+  typeof tempAreasFrom
+>;
+
+const tempAreasTo = [
   {
     title: "B Open",
     x: 171,
@@ -101,7 +100,10 @@ export const areasTo = [
     width: 12,
     height: 12,
   },
-] as const; // Ideally we would ensure this satisfies MapArea[] but that is extremely hard to do
+] as const; // We have to declare as const to type-check the titles.
+export const areasTo: MapArea<string>[] = tempAreasTo as Writeable<
+  typeof tempAreasTo
+>;
 
 export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   {

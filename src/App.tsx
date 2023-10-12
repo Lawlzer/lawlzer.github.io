@@ -9,13 +9,9 @@ import {
   Lineup,
   imageMap,
 } from "./types";
-import {
-  FromAreaTitles,
-  ToAreaTitles,
-  areasFrom,
-  areasTo,
-} from "./maps/ascent/lineups";
+
 import { useMapMap } from "./hooks/useMapMap";
+import type { FromAreaTitles, ToAreaTitles } from "./maps/ascent/lineups";
 
 const maps = [
   "Ascent",
@@ -120,8 +116,12 @@ function App() {
       primaryFrom?.title === thisArea.title;
     if (isPrimaryArea) return 1;
 
-    const areaIsFrom = areasFrom.some((area) => area.title === thisArea.title);
-    const areaIsTo = areasTo.some((area) => area.title === thisArea.title);
+    const areaIsFrom = mapMap[map].areasFrom.some(
+      (area) => area.title === thisArea.title
+    );
+    const areaIsTo = mapMap[map].areasTo.some(
+      (area) => area.title === thisArea.title
+    );
 
     if (
       areaIsTo &&
@@ -171,7 +171,7 @@ function App() {
   }
 
   function newBuildFrom(): React.ReactNode {
-    return areasFrom.map((areaFrom) => {
+    return mapMap[map].areasFrom.map((areaFrom) => {
       return (
         <>
           <image
@@ -211,7 +211,7 @@ function App() {
   }
 
   function newBuildTo(): React.ReactNode {
-    return areasTo.map((areaTo) => {
+    return mapMap[map].areasTo.map((areaTo) => {
       return (
         <>
           <image

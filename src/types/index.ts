@@ -39,3 +39,4 @@ export const agents = Object.keys(agentUtilityMap) as Agent[];
 
 export type Agent = keyof typeof agentUtilityMap;
 export type Utility = (typeof agentUtilityMap)[Agent][number];
+export type Writeable<T> = { -readonly [P in keyof T]: T[P] };

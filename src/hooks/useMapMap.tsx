@@ -6,15 +6,39 @@ import Breeze from "../maps/breeze/map";
 import * as breezeLineups from "../maps/breeze/lineups";
 
 import Todo from "../maps/todo/map";
-// import Breeze from "../maps/breeze/map";
+import { Lineup } from "../types";
 
-export const useMapMap = (newBuildTo: any, newBuildFrom: any) => {
-  const map: { [key: string]: any } = {
+interface AreaFrom {
+  title: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+interface AreaTo {
+  title: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export const useMapMap = (
+  newBuildTo: () => React.ReactNode,
+  newBuildFrom: () => React.ReactNode
+) => {
+  const map: {
+    [key: string]: {
+      svg: any;
+      lineups: Lineup<string, string>[];
+      areasFrom: AreaFrom[];
+      areasTo: AreaTo[];
+    };
+  } = {
     Ascent: {
       svg: <Ascent newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />,
       ...ascentLineups,
     },
-    // Breeze: <Breeze newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />,
     Bind: {
       svg: <Bind newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />,
       ...bindLineups,
