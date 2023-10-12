@@ -1,6 +1,6 @@
-import react, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { type Agent, agentUtilityMap, agents, Utility, MapArea, Lineup, imageMap } from './types';
+import { agents, agentUtilityMap, imageMap, Lineup, MapArea, Utility, type Agent } from './types';
 
 import { useMapMap } from './hooks/useMapMap';
 import type { FromAreaTitles, ToAreaTitles } from './maps/ascent/lineups';

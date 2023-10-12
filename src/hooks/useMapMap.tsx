@@ -1,9 +1,9 @@
-import Ascent from '../maps/ascent/map';
 import * as ascentLineups from '../maps/ascent/lineups';
-import Bind from '../maps/bind/map';
+import Ascent from '../maps/ascent/map';
 import * as bindLineups from '../maps/bind/lineups';
-import Breeze from '../maps/breeze/map';
+import Bind from '../maps/bind/map';
 import * as breezeLineups from '../maps/breeze/lineups';
+import Breeze from '../maps/breeze/map';
 
 import Todo from '../maps/todo/map';
 import { Lineup } from '../types';

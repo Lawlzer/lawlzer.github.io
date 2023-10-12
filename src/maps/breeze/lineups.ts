@@ -1,9 +1,6 @@
-import path from 'path';
-
 import type { Lineup } from '../../types';
 
-import { type Agent, imageMap, type MapArea, Utility } from '../../types';
-import { Writeable } from '../../types';
+import { Writeable, type MapArea } from '../../types';
 import image1 from './images/1.png';
 import image2 from './images/2.png';
 import image3 from './images/3.png';

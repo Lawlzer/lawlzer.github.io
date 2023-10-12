@@ -1,10 +1,10 @@
 import { BottomleftImageVideo } from '../App';
 
 import GekkoImage from '../assets/Gekko.png';
-import SovaImage from '../assets/Sova.png';
 import MoshPitImage from '../assets/MoshPit.png';
-import ShockDartImage from '../assets/ShockDart.png';
 import ReconDartImage from '../assets/ReconDart.png';
+import ShockDartImage from '../assets/ShockDart.png';
+import SovaImage from '../assets/Sova.png';
 export interface MapArea<Titles extends String> {
 	title: Titles;
 	x: number;
