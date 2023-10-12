@@ -4,6 +4,8 @@ import * as bindLineups from '../maps/bind/lineups';
 import Bind from '../maps/bind/map';
 import * as breezeLineups from '../maps/breeze/lineups';
 import Breeze from '../maps/breeze/map';
+import * as havenLineups from '../maps/haven/lineups';
+import Haven from '../maps/haven/map';
 
 import Todo from '../maps/todo/map';
 import { Lineup } from '../types';
@@ -52,10 +54,8 @@ export const useMapMap = (newBuildTo: () => React.ReactNode, newBuildFrom: () =>
 			areasTo: [],
 		},
 		Haven: {
-			svg: <Todo />,
-			lineups: [],
-			areasFrom: [],
-			areasTo: [],
+			svg: <Haven newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />,
+			...havenLineups,
 		},
 		Icebox: {
 			svg: <Todo />,
