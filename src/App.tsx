@@ -29,15 +29,20 @@ function CustomButton({
   mapName,
   isSelected,
   onClick,
+  disabled,
 }: {
+  disabled?: boolean;
   mapName: string;
   isSelected: boolean;
   onClick: () => void;
 }) {
   return (
     <button
+      disabled={disabled === true ? true : false}
       className={`${
-        isSelected
+        disabled === true
+          ? "disabled:opacity-30 duration-300 text-white border-white hover:max-opacity-40 cursor-not-allowed"
+          : isSelected
           ? "bg-blue-500 hover:bg-blue-500 text-white border-blue-500"
           : " text-white border-white"
       } px-4 py-2 rounded-md transition-colors duration-300 font-medium border-2`}
@@ -168,6 +173,12 @@ function App() {
       if (lineupDirection === "startToDestination" && areaIsFrom) return 0.5;
     }
     return 0;
+  }
+
+  function doesThisAgentHaveLineupsForThisMap(agentName: string): boolean {
+    return mapMap[map].lineups.some(
+      (lineup: Lineup<string, string>) => lineup.agent === agentName
+    );
   }
 
   function newBuildFrom(): React.ReactNode {
@@ -304,9 +315,13 @@ function App() {
             return (
               <div className={`${index < original.length - 1 && "mr-3"}`}>
                 <CustomButton
+                  disabled={!doesThisAgentHaveLineupsForThisMap(agentName)}
                   mapName={agentName}
                   isSelected={agentName === agent}
                   onClick={() => {
+                    const agentHasLineupsForThisMap =
+                      doesThisAgentHaveLineupsForThisMap(agentName);
+                    if (!agentHasLineupsForThisMap) return;
                     setAgent(agentName);
                     setUtility(agentUtilityMap[agentName][0]);
                     resetLineup();
