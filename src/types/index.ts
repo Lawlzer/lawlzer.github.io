@@ -1,39 +1,39 @@
-import { BottomleftImageVideo } from "../App";
+import { BottomleftImageVideo } from '../App';
 
-import GekkoImage from "../assets/Gekko.png";
-import SovaImage from "../assets/Sova.png";
-import MoshPitImage from "../assets/MoshPit.png";
-import ShockDartImage from "../assets/ShockDart.png";
-import ReconDartImage from "../assets/ReconDart.png";
+import GekkoImage from '../assets/Gekko.png';
+import SovaImage from '../assets/Sova.png';
+import MoshPitImage from '../assets/MoshPit.png';
+import ShockDartImage from '../assets/ShockDart.png';
+import ReconDartImage from '../assets/ReconDart.png';
 export interface MapArea<Titles extends String> {
-  title: Titles;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+	title: Titles;
+	x: number;
+	y: number;
+	width: number;
+	height: number;
 }
 
 export interface Lineup<FromAreaTitles, ToAreaTitles> {
-  agent: Agent;
-  util: string;
+	agent: Agent;
+	util: string;
 
-  fromTitle: FromAreaTitles;
-  toTitle: ToAreaTitles;
+	fromTitle: FromAreaTitles;
+	toTitle: ToAreaTitles;
 
-  imageStuff: BottomleftImageVideo[];
+	imageStuff: BottomleftImageVideo[];
 }
 
 export const imageMap = {
-  Gekko: GekkoImage,
-  Sova: SovaImage,
-  "Mosh Pit": MoshPitImage,
-  "Shock Dart": ShockDartImage,
-  "Recon Dart": ReconDartImage, // todo
+	Gekko: GekkoImage,
+	Sova: SovaImage,
+	'Mosh Pit': MoshPitImage,
+	'Shock Dart': ShockDartImage,
+	'Recon Dart': ReconDartImage, // todo
 } as const;
 
 export const agentUtilityMap = {
-  Gekko: ["Mosh Pit"],
-  Sova: ["Shock Dart", "Recon Dart"],
+	Gekko: ['Mosh Pit'],
+	Sova: ['Shock Dart', 'Recon Dart'],
 } as const;
 export const agents = Object.keys(agentUtilityMap) as Agent[];
 
