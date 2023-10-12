@@ -3,28 +3,14 @@ import path from "path";
 import type { Lineup } from "../../types";
 
 import { type Agent, imageMap, type MapArea, Utility } from "../../types";
-
+import { Writeable } from "../../types";
 import image1 from "./images/1.png";
 import image2 from "./images/2.png";
 import image3 from "./images/3.png";
 import image4 from "./images/4.png";
 import image5 from "./images/5.png";
-import image6 from "./images/6.png";
-import image7 from "./images/7.png";
-import image8 from "./images/8.png";
-import image9 from "./images/9.png";
-import image10 from "./images/10.png";
-import image11 from "./images/11.png";
-import image12 from "./images/12.png";
-import image13 from "./images/13.png";
-import image14 from "./images/14.png";
-import image15 from "./images/15.png";
-import image16 from "./images/16.png";
-import image17 from "./images/17.png";
-import image18 from "./images/18.png";
-import image19 from "./images/19.png";
 
-export const areasFrom = [
+const tempAreasFrom = [
   {
     title: "Mid Spawn Door Corner",
     x: 411,
@@ -39,9 +25,20 @@ export const areasFrom = [
     width: 16,
     height: 16,
   },
-] as const; // Ideally we would ensure this satisfies MapArea[] but that is extremely hard to do
+  {
+    title: "Mid Cannon Grate",
+    x: 212,
+    y: 486,
+    width: 12,
+    height: 16,
+  },
+] as const; // We have to declare as const to type-check the titles.
 
-export const areasTo = [
+export const areasFrom: MapArea<string>[] = tempAreasFrom as Writeable<
+  typeof tempAreasFrom
+>;
+
+const tempAreasTo = [
   {
     title: "B Default Plant",
     x: 85,
@@ -70,7 +67,24 @@ export const areasTo = [
     width: 20,
     height: 20,
   },
-] as const; // Ideally we would ensure this satisfies MapArea[] but that is extremely hard to do
+  {
+    title: "B Backleft Corner",
+    x: 24,
+    y: 127,
+    width: 16,
+    height: 16,
+  },
+  {
+    title: "B Backright",
+    x: 181,
+    y: 129,
+    width: 16,
+    height: 16,
+  },
+] as const;
+export const areasTo: MapArea<string>[] = tempAreasTo as Writeable<
+  typeof tempAreasTo
+>;
 
 export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
   {
@@ -97,6 +111,25 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
     imageStuff: [
       { image: image2, notes: ["3 Charges", "2 Bounces"] },
       { image: image3, notes: ["1 Charge", "1 Bounce", "No delay."] },
+    ],
+  },
+  {
+    agent: "Sova",
+    util: "Recon Dart",
+
+    fromTitle: "Mid Cannon Grate",
+    toTitle: "B Backleft Corner",
+
+    imageStuff: [
+      {
+        image: image5,
+        notes: [
+          "2 Charges",
+          "1 Bounce",
+          "Aim up-right of the first knot in the vine",
+        ],
+      },
+      { image: image4, notes: ["Stand here"] },
     ],
   },
 ];
