@@ -19,52 +19,45 @@ import image9 from './images/9.png';
 const tempAreasFrom = [
 	{
 		title: 'A TreeHouse Box',
-		x: 556,
-		y: 218,
-		width: 7,
-		height: 7,
+		x: 575,
+		y: 227,
+		width: 20,
+		height: 20,
 	},
 	{
 		title: 'A Main Box',
-		x: 543,
-		y: 448,
-		width: 7,
-		height: 7,
-	},
-	{
-		title: 'A Tree Tree',
-		x: 506,
-		y: 288,
-		width: 7,
-		height: 7,
+		x: 566,
+		y: 470,
+		width: 20,
+		height: 20,
 	},
 	{
 		title: 'A CT Corner',
-		x: 601,
-		y: 102,
-		width: 7,
-		height: 7,
+		x: 615,
+		y: 96,
+		width: 20,
+		height: 20,
 	},
 	{
 		title: 'A Mid Boxes',
-		x: 509,
-		y: 384,
-		width: 7,
-		height: 7,
+		x: 538,
+		y: 396,
+		width: 20,
+		height: 20,
 	},
 	{
 		title: 'B Main Box',
-		x: 134,
-		y: 420,
-		width: 11,
-		height: 11,
+		x: 125,
+		y: 442,
+		width: 20,
+		height: 20,
 	},
 	{
 		title: 'CT Triple Barrels',
 		x: 447,
-		y: 161,
-		width: 7,
-		height: 7,
+		y: 149,
+		width: 20,
+		height: 20,
 	},
 ] as const; // We have to declare as const to type-check the titles.
 
@@ -73,52 +66,52 @@ export const areasFrom: MapArea<string>[] = tempAreasFrom as Writeable<typeof te
 const tempAreasTo = [
 	{
 		title: 'A Dice',
-		x: 674,
-		y: 231,
-		width: 32,
-		height: 28,
-	},
-	{
-		title: 'A Wine',
-		x: 721,
-		y: 368,
-		width: 39,
-		height: 34,
-	},
-	{
-		title: 'A Generator',
-		x: 610,
-		y: 238,
-		width: 24,
-		height: 24,
-	},
-	{
-		title: 'A Outside Gen',
-		x: 626,
-		y: 264,
-		width: 24,
-		height: 24,
-	},
-	{
-		title: 'B Default Box',
-		x: 98,
-		y: 208,
-		width: 21,
+		x: 713,
+		y: 258,
+		width: 25,
 		height: 22,
 	},
 	{
+		title: 'A Wine',
+		x: 759,
+		y: 392,
+		width: 40,
+		height: 38,
+	},
+	{
+		title: 'A Inside Generator',
+		x: 640,
+		y: 237,
+		width: 27,
+		height: 43,
+	},
+	{
+		title: 'A Outside Gen',
+		x: 655,
+		y: 277,
+		width: 27,
+		height: 27,
+	},
+	{
+		title: 'B Default Box',
+		x: 80,
+		y: 213,
+		width: 27,
+		height: 27,
+	},
+	{
 		title: 'B Far Box',
-		x: 112,
+		x: 100,
 		y: 156,
-		width: 21,
-		height: 21,
+		width: 20,
+		height: 20,
 	},
 	{
 		title: 'B Opposite Lane',
-		x: 175,
+		x: 166,
 		y: 156,
-		width: 29,
-		height: 23,
+		width: 34,
+		height: 24,
 	},
 ] as const; // We have to declare as const to type-check the titles.
 export const areasTo: MapArea<string>[] = tempAreasTo as Writeable<typeof tempAreasTo>;
@@ -231,7 +224,7 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
 		util: 'Mosh Pit',
 
 		fromTitle: 'A Main Box',
-		toTitle: 'A Generator',
+		toTitle: 'A Inside Generator',
 
 		imageStuff: [{ image: image11, notes: ['Aim directly at peak of spike'] }],
 	},
@@ -273,7 +266,7 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
 		util: 'Mosh Pit',
 
 		fromTitle: 'A CT Corner',
-		toTitle: 'A Generator',
+		toTitle: 'A Inside Generator',
 
 		imageStuff: [{ image: image14, notes: ['Turret Bullet against this corner'] }],
 	},
@@ -282,8 +275,6 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
 export type FromAreaTitles = (typeof areasFrom)[number]['title'];
 export type ToAreaTitles = (typeof areasTo)[number]['title'];
 export type AllAreaTitles = FromAreaTitles | ToAreaTitles;
-
-let temp: MapArea<AllAreaTitles>[] = [...areasFrom, ...areasTo];
 
 for (let i = 0; i < lineups.length; i++) {
 	for (let j = i + 1; j < lineups.length; j++) {
