@@ -153,7 +153,7 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
 		imageStuff: [
 			{
 				image: image4,
-				notes: ['Insta-jump throw', 'Turret bullet here'],
+				notes: ['Insta-jump throw', 'X on the bolt'],
 			},
 		],
 	},
@@ -167,7 +167,7 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
 		imageStuff: [
 			{
 				image: image5,
-				notes: ['Insta-jump throw', 'Turret bullet here'],
+				notes: ['Insta-jump throw', 'X on the bolt'],
 			},
 		],
 	},
