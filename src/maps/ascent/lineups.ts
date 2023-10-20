@@ -215,7 +215,7 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
 		imageStuff: [
 			{
 				image: image10,
-				notes: ['Jump insta-throw', 'Turret bullet touching <that thing>'],
+				notes: ['Jump insta-throw', 'tbd... not sure what a good lineup is'],
 			},
 		],
 	},
@@ -268,28 +268,10 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
 		fromTitle: 'A CT Corner',
 		toTitle: 'A Inside Generator',
 
-		imageStuff: [{ image: image14, notes: ['Turret Bullet against this corner'] }],
+		imageStuff: [{ image: image14, notes: ['Vertical with left side of above thing', 'Horizontal with bottom of thing'] }],
 	},
 ];
 
 export type FromAreaTitles = (typeof areasFrom)[number]['title'];
 export type ToAreaTitles = (typeof areasTo)[number]['title'];
 export type AllAreaTitles = FromAreaTitles | ToAreaTitles;
-
-for (let i = 0; i < lineups.length; i++) {
-	for (let j = i + 1; j < lineups.length; j++) {
-		if (lineups[i].fromTitle === lineups[j].fromTitle && lineups[i].toTitle === lineups[j].toTitle) {
-			console.warn('Duplicate lineup FROM and TO detected: ', lineups[i], lineups[j]);
-		}
-	}
-}
-
-// for (let i = 0; i < lineups.length; i++) {
-//   for (let j = i + 1; j < lineups.length; j++) {
-//     for (const imgUrl of lineups[i].imageSources) {
-//       if (lineups[j].imageSources.includes(imgUrl)) {
-//         console.debug("Duplicate lineup image detected: ", imgUrl);
-//       }
-//     }
-//   }
-// }
