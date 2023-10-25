@@ -7,6 +7,8 @@ import image12 from './images/12.png';
 import image13 from './images/13.png';
 import image14 from './images/14.png';
 import image15 from './images/15.png';
+import image16 from './images/16.png';
+import image17 from './images/17.png';
 import image2 from './images/2.png';
 import image3 from './images/3.png';
 import image4 from './images/4.png';
@@ -59,11 +61,25 @@ const tempAreasFrom = [
 		width: 20,
 		height: 20,
 	},
+	{
+		title: 'A CT Table',
+		x: 574,
+		y: 576,
+		width: 25,
+		height: 25,
+	},
 ] as const; // We have to declare as const to type-check the titles.
 
 export const areasFrom: MapArea<string>[] = tempAreasFrom as Writeable<typeof tempAreasFrom>;
 
 const tempAreasTo = [
+	{
+		title: 'A Gen Corner',
+		x: 643,
+		y: 213,
+		width: 29,
+		height: 29,
+	},
 	{
 		title: 'A Dice',
 		x: 713,
@@ -266,9 +282,21 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
 		util: 'Mosh Pit',
 
 		fromTitle: 'A CT Corner',
-		toTitle: 'A Inside Generator',
+		toTitle: 'A Gen Corner',
 
 		imageStuff: [{ image: image14, notes: ['Vertical with left side of above thing', 'Horizontal with bottom of thing'] }],
+	},
+	{
+		agent: 'Gekko',
+		util: 'Mosh Pit',
+
+		fromTitle: 'A CT Table',
+		toTitle: 'A Gen Corner',
+
+		imageStuff: [
+			{ image: image16, notes: ['Insta-jump throw'] },
+			{ image: image17, notes: ['Stand here'] },
+		],
 	},
 ];
 
