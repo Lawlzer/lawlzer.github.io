@@ -35,7 +35,7 @@ function App() {
 
 	const mapMap = useMapMap(newBuildTo, newBuildFrom);
 
-	function preloadImages() {
+	useEffect(() => {
 		const lineups = mapMap[map].lineups;
 
 		lineups.forEach((lineup: Lineup<any, any>) => {
@@ -49,11 +49,7 @@ function App() {
 					})
 			);
 		});
-	}
-
-	useEffect(() => {
-		preloadImages();
-	}, [map, agent, utility]);
+	}, [map, mapMap, agent, utility]);
 
 	function getAreaOpacity(thisArea: MapArea<string>): number {
 		const areaIsUsedInLineup = mapMap[map].lineups.some((lineup: Lineup<any, any>) => {
@@ -193,7 +189,7 @@ function App() {
 		<div className='flex items-stretch w-screen h-screen max-w-full bg-gray-800'>
 			{fullscreen && (
 				<div className='w-screen h-screen absolute top-0 left-0 cursor-pointer flex' onClick={() => setFullscreen(undefined)}>
-					<img src={fullscreen} className='w-full h-full p-10 absolute z-10' />
+					<img src={fullscreen} className='w-full h-full p-10 absolute z-10' alt='' />
 					<div className='w-full h-full bg-black opacity-80 absolute z-0'></div>
 				</div>
 			)}
@@ -282,7 +278,7 @@ function App() {
 				<div className='mt-4 flex flex-col'>
 					{bottomleftImageVideo?.map((imageData, index) => (
 						<>
-							<img src={imageData.image} alt={`Image ${index + 1}`} className='cursor-pointer w-9/12 mx-auto mb-1' onClick={() => setFullscreen(imageData.image)} />
+							<img src={imageData.image} alt={`${index + 1}`} className='cursor-pointer w-9/12 mx-auto mb-1' onClick={() => setFullscreen(imageData.image)} />
 							{imageData?.notes.map((note) => {
 								return <div className='text-white text-center font-medium text-sm'>• {note}</div>;
 							})}
