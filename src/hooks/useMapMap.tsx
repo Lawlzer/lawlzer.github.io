@@ -6,6 +6,8 @@ import * as breezeLineups from '../maps/breeze/lineups';
 import Breeze from '../maps/breeze/map';
 import * as havenLineups from '../maps/haven/lineups';
 import Haven from '../maps/haven/map';
+import * as lotusLineups from '../maps/lotus/lineups';
+import Lotus from '../maps/lotus/map';
 
 import Todo from '../maps/todo/map';
 import { Lineup } from '../types';
@@ -64,10 +66,8 @@ export const useMapMap = (newBuildTo: () => React.ReactNode, newBuildFrom: () =>
 			areasTo: [],
 		},
 		Lotus: {
-			svg: <Todo />,
-			lineups: [],
-			areasFrom: [],
-			areasTo: [],
+			svg: <Lotus newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />,
+			...lotusLineups,
 		},
 		Pearl: {
 			svg: <Todo />,
