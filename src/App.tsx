@@ -5,18 +5,19 @@ import { agents, agentUtilityMap, imageMap, Lineup, MapArea, Utility, type Agent
 import { useMapMap } from './hooks/useMapMap';
 import type { FromAreaTitles, ToAreaTitles } from './maps/ascent/lineups';
 
+export interface BottomleftImageVideo {
+	notes: [] | [string, string] | [string] | [string, string, string];
+	image: string;
+}
+
 const maps = ['Ascent', 'Bind', 'Breeze', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Sunset'];
+
 function CustomButton({ mapName, isSelected, onClick, disabled }: { disabled?: boolean; mapName: string; isSelected: boolean; onClick: () => void }) {
 	return (
 		<button disabled={disabled === true ? true : false} className={`${disabled === true ? 'disabled:opacity-30 duration-300 text-white border-white hover:max-opacity-40 cursor-not-allowed' : isSelected ? 'bg-blue-500 hover:bg-blue-500 text-white border-blue-500' : ' text-white border-white'} px-4 py-2 rounded-md transition-colors duration-300 font-medium border-2`} onClick={onClick}>
 			{mapName}
 		</button>
 	);
-}
-
-export interface BottomleftImageVideo {
-	notes: [] | [string, string] | [string] | [string, string, string];
-	image: string;
 }
 
 export type LineupDirection = 'destinationToStart' | 'startToDestination';
@@ -35,6 +36,7 @@ function App() {
 
 	const mapMap = useMapMap(newBuildTo, newBuildFrom);
 
+	// Preload images for the current map and agent
 	useEffect(() => {
 		const lineups = mapMap[map].lineups;
 
@@ -116,8 +118,7 @@ function App() {
 							if (alreadyActive) {
 								setPrimaryFrom(null);
 								setBottomleftImageVideoImages(null);
-
-								if (lineupDirection === 'startToDestination' && primaryFrom) setPrimaryTo(null);
+								setPrimaryTo(null);
 
 								return;
 							}
@@ -155,8 +156,7 @@ function App() {
 							if (alreadyActive) {
 								setPrimaryTo(null);
 								setBottomleftImageVideoImages(null);
-
-								if (lineupDirection === 'destinationToStart' && primaryTo) setPrimaryFrom(null);
+								setPrimaryFrom(null);
 
 								return;
 							}
