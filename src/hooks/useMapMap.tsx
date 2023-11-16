@@ -8,6 +8,8 @@ import * as havenLineups from '../maps/haven/lineups';
 import Haven from '../maps/haven/map';
 import * as lotusLineups from '../maps/lotus/lineups';
 import Lotus from '../maps/lotus/map';
+import * as splitLineups from '../maps/split/lineups';
+import Split from '../maps/split/map';
 
 import Todo from '../maps/todo/map';
 import { Lineup } from '../types';
@@ -76,10 +78,8 @@ export const useMapMap = (newBuildTo: () => React.ReactNode, newBuildFrom: () =>
 			areasTo: [],
 		},
 		Split: {
-			svg: <Todo />,
-			lineups: [],
-			areasFrom: [],
-			areasTo: [],
+			svg: <Split newBuildTo={newBuildTo} newBuildFrom={newBuildFrom} />,
+			...splitLineups,
 		},
 		Sunset: {
 			svg: <Todo />,

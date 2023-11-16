@@ -184,7 +184,7 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
 		fromTitle: 'B Main Box',
 		toTitle: 'B Opposite Lane',
 
-		imageStuff: [{ image: image6, notes: ['Insta-jump throw'] }],
+		imageStuff: [{ image: image6, notes: ['Wait 100ms-jump throw'] }],
 	},
 
 	{
