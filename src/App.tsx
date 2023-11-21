@@ -12,7 +12,7 @@ export interface BottomleftImageVideo {
 
 const maps = ['Ascent', 'Bind', 'Breeze', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Sunset'];
 
-function CustomButton({ mapName, isSelected, onClick, disabled }: { disabled?: boolean; mapName: string; isSelected: boolean; onClick: () => void }) {
+function CustomButton({ buttonText: mapName, isSelected, onClick, disabled }: { disabled?: boolean; buttonText: string; isSelected: boolean; onClick: () => void }) {
 	return (
 		<button disabled={disabled === true ? true : false} className={`${disabled === true ? 'disabled:opacity-30 duration-300 text-white border-white hover:max-opacity-40 cursor-not-allowed' : isSelected ? 'bg-blue-500 hover:bg-blue-500 text-white border-blue-500' : ' text-white border-white'} px-4 py-2 rounded-md transition-colors duration-300 font-medium border-2`} onClick={onClick}>
 			{mapName}
@@ -142,7 +142,7 @@ function App() {
 				<>
 					<image
 						key={'from ' + areaFrom.title}
-						className='cursor-pointer duration-1000'
+						className='cursor-pointer'
 						x={areaFrom.x - 6} // todo fix
 						y={areaFrom.y - 6}
 						width={areaFrom.width + 12}
@@ -172,7 +172,7 @@ function App() {
 				<>
 					<image
 						key={'to ' + areaTo.title}
-						className='cursor-pointer duration-1000'
+						className='cursor-pointer'
 						x={areaTo.x - 10}
 						y={areaTo.y - 10}
 						width={areaTo.width + 20}
@@ -215,7 +215,7 @@ function App() {
 					{maps.map((thisMap, index, original) => (
 						<div className={`${index < original.length - 1 && 'mr-3'} mt-3`}>
 							<CustomButton
-								mapName={thisMap}
+								buttonText={thisMap}
 								isSelected={thisMap === map}
 								onClick={() => {
 									setMap(thisMap);
@@ -234,7 +234,7 @@ function App() {
 							<div className={`${index < original.length - 1 && 'mr-3'}`}>
 								<CustomButton
 									disabled={!doesAgentHaveLineupsForMap(agentName, map)}
-									mapName={agentName}
+									buttonText={agentName}
 									isSelected={agentName === agent}
 									onClick={() => {
 										const agentHasLineupsForThisMap = doesAgentHaveLineupsForMap(agentName, map);
@@ -257,7 +257,7 @@ function App() {
 								<div className={`${index < original.length - 1 && 'mr-3'}`}>
 									<CustomButton
 										disabled={!mapMap[map].lineups.some((lineup: Lineup<any, any>) => lineup.agent === agent && lineup.util === localUtility)}
-										mapName={localUtility}
+										buttonText={localUtility}
 										isSelected={localUtility === utility}
 										onClick={() => {
 											setUtility(localUtility);
@@ -273,7 +273,7 @@ function App() {
 				<div className='align-middle flex justify-center mt-3'>
 					<div className=''>
 						<CustomButton
-							mapName={'Start -> Destination'}
+							buttonText={'Start -> Destination'}
 							isSelected={lineupDirection === 'startToDestination'}
 							onClick={() => {
 								setLineupDirection('startToDestination');
@@ -283,7 +283,7 @@ function App() {
 					</div>
 					<div className=''>
 						<CustomButton
-							mapName={'Destination -> Start'}
+							buttonText={'Destination -> Start'}
 							isSelected={lineupDirection === 'destinationToStart'}
 							onClick={() => {
 								setLineupDirection('destinationToStart');
