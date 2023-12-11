@@ -5,8 +5,14 @@ import { agents, agentUtilityMap, imageMap, Lineup, MapArea, Utility, type Agent
 import { useMapMap } from './hooks/useMapMap';
 import type { FromAreaTitles, ToAreaTitles } from './maps/ascent/lineups';
 
+export interface BottomleftImageVideo {
+	notes: [] | [string, string] | [string] | [string, string, string];
+	image: string;
+}
+
 const maps = ['Ascent', 'Bind', 'Breeze', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Sunset'];
-function CustomButton({ mapName, isSelected, onClick, disabled }: { disabled?: boolean; mapName: string; isSelected: boolean; onClick: () => void }) {
+
+function CustomButton({ buttonText: mapName, isSelected, onClick, disabled }: { disabled?: boolean; buttonText: string; isSelected: boolean; onClick: () => void }) {
 	return (
 		<button disabled={disabled === true ? true : false} className={`${disabled === true ? 'disabled:opacity-30 duration-300 text-white border-white hover:max-opacity-40 cursor-not-allowed' : isSelected ? 'bg-blue-500 hover:bg-blue-500 text-white border-blue-500' : ' text-white border-white'} px-4 py-2 rounded-md transition-colors duration-300 font-medium border-2`} onClick={onClick}>
 			{mapName}
@@ -14,16 +20,11 @@ function CustomButton({ mapName, isSelected, onClick, disabled }: { disabled?: b
 	);
 }
 
-export interface BottomleftImageVideo {
-	notes: [] | [string, string] | [string] | [string, string, string];
-	image: string;
-}
-
 export type LineupDirection = 'destinationToStart' | 'startToDestination';
 function App() {
-	const [map, setMap] = useState('Ascent');
-	const [agent, setAgent] = useState<Agent>('Gekko');
-	const [utility, setUtility] = useState<Utility>('Mosh Pit');
+	const [map, setMap] = useState<string>('Ascent');
+	const [agent, setAgent] = useState<Agent | undefined>('Gekko');
+	const [utility, setUtility] = useState<Utility | undefined>('Mosh Pit');
 	const [lineupDirection, setLineupDirection] = useState<LineupDirection>('destinationToStart');
 
 	const [bottomleftImageVideo, setBottomleftImageVideoImages] = useState<BottomleftImageVideo[] | null>();
@@ -32,10 +33,18 @@ function App() {
 
 	const [primaryTo, setPrimaryTo] = useState<MapArea<ToAreaTitles> | null>(null);
 	const [primaryFrom, setPrimaryFrom] = useState<MapArea<FromAreaTitles> | null>(null);
-
 	const mapMap = useMapMap(newBuildTo, newBuildFrom);
 
-	function preloadImages() {
+	useEffect(() => {
+		setBottomleftImageVideoImages(null);
+		const currentLineup = mapMap[map].lineups.find((lineup: Lineup<unknown, unknown>) => lineup.fromTitle === primaryFrom?.title && lineup.toTitle === primaryTo?.title && lineup.util === utility && lineup.agent === agent);
+
+		if (!currentLineup) return;
+		setBottomleftImageVideoImages(currentLineup.imageStuff);
+	}, [primaryTo, primaryFrom, agent, utility, map, mapMap]);
+
+	// Preload images for the current map and agent
+	useEffect(() => {
 		const lineups = mapMap[map].lineups;
 
 		lineups.forEach((lineup: Lineup<any, any>) => {
@@ -49,11 +58,37 @@ function App() {
 					})
 			);
 		});
-	}
+	}, [map, mapMap, agent, utility]);
 
 	useEffect(() => {
-		preloadImages();
-	}, [map, agent, utility]);
+		let firstAgentWithLineups: Agent | undefined = undefined;
+		for (const agent of agents) {
+			if (doesAgentHaveLineupsForMap(agent, map)) {
+				firstAgentWithLineups = agent;
+				console.log('first agent with lineups set to: ', firstAgentWithLineups, 'for map: ', map);
+				break;
+			}
+		}
+		if (!firstAgentWithLineups) {
+			setAgent(undefined);
+			setUtility(undefined);
+			return;
+		}
+		console.log('setting agent to: ', firstAgentWithLineups);
+
+		for (const utility of agentUtilityMap[firstAgentWithLineups]) {
+			for (const lineup of mapMap[map].lineups) {
+				if (lineup.agent === firstAgentWithLineups && lineup.util === utility) {
+					console.log('setting agent to: ', firstAgentWithLineups);
+					console.log('utility set to: ', utility);
+					setAgent(firstAgentWithLineups);
+					setUtility(utility);
+					return;
+				}
+			}
+		}
+		console.log('uhuuuhhhh');
+	}, [map]);
 
 	function getAreaOpacity(thisArea: MapArea<string>): number {
 		const areaIsUsedInLineup = mapMap[map].lineups.some((lineup: Lineup<any, any>) => {
@@ -97,8 +132,8 @@ function App() {
 		return 0;
 	}
 
-	function doesThisAgentHaveLineupsForThisMap(agentName: string): boolean {
-		return mapMap[map].lineups.some((lineup: Lineup<string, string>) => lineup.agent === agentName);
+	function doesAgentHaveLineupsForMap(agentName: string, mapName: string): boolean {
+		return mapMap[mapName].lineups.some((lineup: Lineup<string, string>) => lineup.agent === agentName);
 	}
 
 	function newBuildFrom(): React.ReactNode {
@@ -107,32 +142,23 @@ function App() {
 				<>
 					<image
 						key={'from ' + areaFrom.title}
-						className='cursor-pointer duration-1000'
+						className='cursor-pointer'
 						x={areaFrom.x - 6} // todo fix
 						y={areaFrom.y - 6}
 						width={areaFrom.width + 12}
 						height={areaFrom.height + 12}
 						opacity={getAreaOpacity(areaFrom)}
 						pointerEvents={getAreaOpacity(areaFrom) === 0 ? 'none' : 'auto'}
-						href={imageMap[agent]}
+						href={agent && imageMap[agent]}
 						onClick={() => {
 							const alreadyActive = areaFrom.title === primaryFrom?.title;
 							if (alreadyActive) {
 								setPrimaryFrom(null);
-								setBottomleftImageVideoImages(null);
-
-								if (lineupDirection === 'startToDestination' && primaryFrom) setPrimaryTo(null);
-
+								setPrimaryTo(null);
 								return;
 							}
 
 							setPrimaryFrom(areaFrom);
-
-							const currentLineup = getCurrentLineup({
-								newAreaFrom: areaFrom,
-							});
-							if (!currentLineup) return;
-							setBottomleftImageVideoImages(currentLineup.imageStuff);
 						}}
 					></image>
 				</>
@@ -146,31 +172,23 @@ function App() {
 				<>
 					<image
 						key={'to ' + areaTo.title}
-						className='cursor-pointer duration-1000'
+						className='cursor-pointer'
 						x={areaTo.x - 10}
 						y={areaTo.y - 10}
 						width={areaTo.width + 20}
 						height={areaTo.height + 20}
 						opacity={getAreaOpacity(areaTo)}
 						pointerEvents={getAreaOpacity(areaTo) === 0 ? 'none' : 'auto'}
-						href={imageMap[utility]}
+						href={utility && imageMap[utility]}
 						onClick={() => {
 							const alreadyActive = areaTo.title === primaryTo?.title;
 							if (alreadyActive) {
 								setPrimaryTo(null);
-								setBottomleftImageVideoImages(null);
-
-								if (lineupDirection === 'destinationToStart' && primaryTo) setPrimaryFrom(null);
-
+								setPrimaryFrom(null);
 								return;
 							}
 
 							setPrimaryTo(areaTo);
-
-							const currentLineup = getCurrentLineup({ newAreaTo: areaTo });
-							if (!currentLineup) return;
-
-							setBottomleftImageVideoImages(currentLineup.imageStuff);
 						}}
 					></image>
 				</>
@@ -181,19 +199,13 @@ function App() {
 	function resetLineup() {
 		setPrimaryTo(null);
 		setPrimaryFrom(null);
-		setBottomleftImageVideoImages(null);
-	}
-
-	function getCurrentLineup({ newAreaTo, newAreaFrom }: { newAreaTo?: MapArea<ToAreaTitles>; newAreaFrom?: MapArea<FromAreaTitles> }): Lineup<FromAreaTitles, ToAreaTitles> | null {
-		const lineup = mapMap[map].lineups.find((lineup: Lineup<any, any>) => lineup.fromTitle === (newAreaFrom?.title ?? primaryFrom?.title) && lineup.toTitle === (newAreaTo?.title ?? primaryTo?.title));
-		return lineup ?? null;
 	}
 
 	return (
 		<div className='flex items-stretch w-screen h-screen max-w-full bg-gray-800'>
 			{fullscreen && (
 				<div className='w-screen h-screen absolute top-0 left-0 cursor-pointer flex' onClick={() => setFullscreen(undefined)}>
-					<img src={fullscreen} className='w-full h-full p-10 absolute z-10' />
+					<img src={fullscreen} className='w-full h-full p-10 absolute z-10' alt='' />
 					<div className='w-full h-full bg-black opacity-80 absolute z-0'></div>
 				</div>
 			)}
@@ -203,10 +215,11 @@ function App() {
 					{maps.map((thisMap, index, original) => (
 						<div className={`${index < original.length - 1 && 'mr-3'} mt-3`}>
 							<CustomButton
-								mapName={thisMap}
+								buttonText={thisMap}
 								isSelected={thisMap === map}
 								onClick={() => {
 									setMap(thisMap);
+
 									resetLineup();
 								}}
 							/>
@@ -220,11 +233,11 @@ function App() {
 						return (
 							<div className={`${index < original.length - 1 && 'mr-3'}`}>
 								<CustomButton
-									disabled={!doesThisAgentHaveLineupsForThisMap(agentName)}
-									mapName={agentName}
+									disabled={!doesAgentHaveLineupsForMap(agentName, map)}
+									buttonText={agentName}
 									isSelected={agentName === agent}
 									onClick={() => {
-										const agentHasLineupsForThisMap = doesThisAgentHaveLineupsForThisMap(agentName);
+										const agentHasLineupsForThisMap = doesAgentHaveLineupsForMap(agentName, map);
 										if (!agentHasLineupsForThisMap) return;
 										setAgent(agentName);
 										setUtility(agentUtilityMap[agentName][0]);
@@ -238,27 +251,29 @@ function App() {
 
 				{/* Utilities */}
 				<div className='align-middle flex justify-center mt-3'>
-					{agentUtilityMap[agent].map((localUtility, index, original) => {
-						return (
-							<div className={`${index < original.length - 1 && 'mr-3'}`}>
-								<CustomButton
-									mapName={localUtility}
-									isSelected={localUtility === utility}
-									onClick={() => {
-										setUtility(localUtility);
-										resetLineup();
-									}}
-								/>
-							</div>
-						);
-					})}
+					{agent &&
+						agentUtilityMap[agent].map((localUtility, index, original) => {
+							return (
+								<div className={`${index < original.length - 1 && 'mr-3'}`}>
+									<CustomButton
+										disabled={!mapMap[map].lineups.some((lineup: Lineup<any, any>) => lineup.agent === agent && lineup.util === localUtility)}
+										buttonText={localUtility}
+										isSelected={localUtility === utility}
+										onClick={() => {
+											setUtility(localUtility);
+											resetLineup();
+										}}
+									/>
+								</div>
+							);
+						})}
 				</div>
 
 				{/* Lineup Direction */}
 				<div className='align-middle flex justify-center mt-3'>
 					<div className=''>
 						<CustomButton
-							mapName={'Start -> Destination'}
+							buttonText={'Start -> Destination'}
 							isSelected={lineupDirection === 'startToDestination'}
 							onClick={() => {
 								setLineupDirection('startToDestination');
@@ -268,7 +283,7 @@ function App() {
 					</div>
 					<div className=''>
 						<CustomButton
-							mapName={'Destination -> Start'}
+							buttonText={'Destination -> Start'}
 							isSelected={lineupDirection === 'destinationToStart'}
 							onClick={() => {
 								setLineupDirection('destinationToStart');
@@ -282,7 +297,7 @@ function App() {
 				<div className='mt-4 flex flex-col'>
 					{bottomleftImageVideo?.map((imageData, index) => (
 						<>
-							<img src={imageData.image} alt={`Image ${index + 1}`} className='cursor-pointer w-9/12 mx-auto mb-1' onClick={() => setFullscreen(imageData.image)} />
+							<img src={imageData.image} alt={`${index + 1}`} className='cursor-pointer w-9/12 mx-auto mb-1' onClick={() => setFullscreen(imageData.image)} />
 							{imageData?.notes.map((note) => {
 								return <div className='text-white text-center font-medium text-sm'>• {note}</div>;
 							})}
@@ -300,32 +315,3 @@ function App() {
 	);
 }
 export default App;
-
-// <div className="w-1/2">
-// {/* Render images and/or videos */}
-// {true && (
-//   <div>
-//     <h2 className="text-xl font-bold">Images</h2>
-//     {bottomleftImageVideo?.sources.map((source, index) => (
-//       <img
-//         key={index}
-//         src={source}
-//         alt={`Image ${index + 1}`}
-//         className="w-full"
-//       />
-//     ))}
-//   </div>
-// )}
-
-// {false && (
-//   <div>
-//     <h2 className="text-xl font-bold">Videos</h2>
-//     {bottomleftImageVideo?.sources.map((source, index) => (
-//       <video key={index} controls className="w-full">
-//         <source src={source} type="video/mp4" />
-//         Your browser does not support the video tag.
-//       </video>
-//     ))}
-//   </div>
-// )}
-// </div>
