@@ -62,17 +62,17 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
 		agent: 'Gekko',
 		util: 'Mosh Pit',
 
-		fromTitle: 'C Long Right Corner',
-		toTitle: 'C Safe',
+		fromTitle: 'A CT',
+		toTitle: 'A Site Top Plant',
 
 		imageStuff: [
 			{
 				image: image1,
-				notes: ['Shift-walk instathrow', 'Aim at peak of mountain'],
+				notes: ['Aim under the red arrow, against this horizontal line'],
 			},
 			{
 				image: image2,
-				notes: ['Insta-jump-throw', 'Aim between the bottom leaf, and the ledge thing lower-right'],
+				notes: ['Stand in this corner'],
 			},
 		],
 	},
@@ -81,12 +81,12 @@ export const lineups: Lineup<FromAreaTitles, ToAreaTitles>[] = [
 		util: 'Mosh Pit',
 
 		fromTitle: 'A CT',
-		toTitle: 'A Site Top Plant',
+		toTitle: 'A Site Lower Long Plant',
 
 		imageStuff: [
 			{
 				image: image3,
-				notes: ['Jump insta-throw', 'Crosshair under red arrow'],
+				notes: ['Shift-walk 0.25s-delay-throw'],
 			},
 		],
 	},
